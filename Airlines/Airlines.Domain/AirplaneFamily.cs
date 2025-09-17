@@ -1,23 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Airlines.Domain;
+﻿namespace Airlines.Domain;
 
 /// <summary>
-/// Класс, описывающий семейство самолетов
+/// Class describing a family of aircraft
 /// </summary>
 public class AirplaneFamily
 {
     /// <summary>
-    /// Название семейства
+    /// Family name
     /// </summary>
     public required string NameOfFamily { get; set; }
 
     /// <summary>
-    /// Название производителя
+    /// Manufacturer name
     /// </summary>
     public required string NameOfManufacturer { get; set; }
 }

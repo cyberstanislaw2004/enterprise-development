@@ -1,55 +1,52 @@
-﻿using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
-
-namespace Airlines.Domain;
+﻿namespace Airlines.Domain;
 
 /// <summary>
-/// Класс, хранящий сведения о авиарейсе
+/// Class that stores flight information
 /// </summary>
 public class Flight
 {
     /// <summary>
-    /// Уникальный ID для праймари ключа в БД
+    /// Unique ID for the primary key in the database
     /// </summary>
     public required int Id { get; set; }
 
     /// <summary>
-    /// Уникальный шифр авиарейса
+    /// Unique flight code
     /// </summary>
     public required string FlightNumber { get; set; }
 
     /// <summary>
-    /// Пункт отправления(например LED)
+    /// Origin point (eg LED)
     /// </summary>
     public required string DepartureAirportCode { get; set; }
 
     /// <summary>
-    /// Пункт прибытия
+    /// Arrival point
     /// </summary>
     public required string DestinationAirportCode { get; set; }
 
     /// <summary>
-    /// Дата отправления рейса 
+    /// Flight departure date 
     /// </summary>
     public required DateOnly DepartureDate { get; set; }
 
     /// <summary>
-    /// Дата прибытия рейса
+    /// Flight arrival date
     /// </summary>
     public required DateOnly ArrivalDate { get; set; }
 
     /// <summary>
-    /// Время отправления рейса
+    /// Flight departure time
     /// </summary>
     public required TimeOnly DepartureTime { get; set; }
 
     /// <summary>
-    /// Время в пути
+    /// Travel time
     /// </summary>
     public required TimeSpan Duration { get; set; }
 
     /// <summary>
-    /// Модель самолета
+    /// Airplane model
     /// </summary>
     public required AirplaneModel AirplaneModel { get; set; }
 }

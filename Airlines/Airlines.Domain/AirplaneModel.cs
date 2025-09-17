@@ -1,44 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Airlines.Domain;
+﻿namespace Airlines.Domain;
 
 /// <summary>
-/// Класс, хранящий сведения о моделе самолета
+/// A class that stores information about an aircraft model
 /// </summary>
 public class AirplaneModel
 {
     /// <summary>
-    /// Уникальный ID для праймари ключа в БД
+    /// Unique ID for the primary key in the database
     /// </summary>
     public required int Id { get; set; }
 
     /// <summary>
-    /// Название модели самолета
+    /// Aircraft model name
     /// </summary>
     public required string ModelName { get; set; }
 
     /// <summary>
-    /// Семейство модели
+    /// Model family
     /// </summary>
     public required AirplaneFamily AirplaneFamily { get; set; }
 
     /// <summary>
-    /// Дальность полета
+    /// Flight range
     /// </summary>
     public required double RangeOfFlight { get; set; }
 
     /// <summary>
-    /// Пассажировместимость
+    /// Passenger capacity
     /// </summary>
     public required int PassengerCapacity { get; set; }
 
     /// <summary>
-    /// Грузовместимость
+    /// Cargo capacity
     /// </summary>
     public required double CargoCapacity { get; set; }
 }

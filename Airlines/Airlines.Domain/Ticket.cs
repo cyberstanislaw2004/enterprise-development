@@ -1,44 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-
-namespace Airlines.Domain;
+﻿namespace Airlines.Domain;
 
 /// <summary>
-/// Класс, характеризующий билет
+/// Class characterizing a ticket
 /// </summary>
 public class Ticket
 {
     /// <summary>
-    /// Уникальный ID для праймари ключа в БД
+    /// Unique ID for the primary key in the database
     /// </summary>
     public required int Id { get; set; }
 
     /// <summary>
-    /// Информация о рейсе
+    /// Flight information
     /// </summary>
     public required Flight FlightInfo { get; set; }
 
     /// <summary>
-    /// Информация о пассажире
+    /// Passenger information
     /// </summary>
     public required Passenger PassengerInfo { get; set; }
 
     /// <summary>
-    /// Номер сидения
+    /// Seat number
     /// </summary>
     public required string SeatNumber { get; set; }
 
     /// <summary>
-    /// Наличие ручной клади
+    /// Availability of hand luggage
     /// </summary>
     public required bool? HandLuggageAvailability { get; set; } // 0 - no; 1 - yes
 
     /// <summary>
-    /// Суммарный вес багажа
+    /// Total luggage weight
     /// </summary>
     public required double TotalBaggageWeight { get; set; }
 }

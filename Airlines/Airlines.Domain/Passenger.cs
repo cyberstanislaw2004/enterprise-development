@@ -1,34 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Airlines.Domain;
+﻿namespace Airlines.Domain;
 
 /// <summary>
-/// Класс, характеризующий пассажира
+/// Passenger class
 /// </summary>
 public class Passenger
 {
     /// <summary>
-    /// Уникальный ID для праймари ключа в БД
+    /// Unique ID for the primary key in the database
     /// </summary>
     public required int Id { get; set; }
 
     /// <summary>
-    /// Номер паспорта
+    /// Passport number
     /// </summary>
     public required string NumberOfPasspotr { get; set; }
 
     /// <summary>
-    /// ФИО
+    /// Full name
     /// </summary>
     public required string FullName { get; set; }
 
     /// <summary>
-    /// Дата рождения
+    /// Date of birth
     /// </summary>
     public required DateOnly BirthDate { get; set; }
 }
