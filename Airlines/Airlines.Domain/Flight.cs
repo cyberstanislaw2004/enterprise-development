@@ -28,22 +28,22 @@ public class Flight
     /// <summary>
     /// Flight departure date 
     /// </summary>
-    public required DateOnly DepartureDate { get; set; }
+    public DateOnly? DepartureDate { get; set; }
 
     /// <summary>
     /// Flight arrival date
     /// </summary>
-    public required DateOnly ArrivalDate { get; set; }
+    public DateOnly? ArrivalDate { get; set; }
 
     /// <summary>
     /// Flight departure time
     /// </summary>
-    public required TimeOnly DepartureTime { get; set; }
+    public TimeOnly? DepartureTime { get; set; }
 
     /// <summary>
     /// Travel time
     /// </summary>
-    public required TimeSpan Duration { get; set; }
+    public TimeSpan? Duration { get; set; }
 
     /// <summary>
     /// Airplane model
