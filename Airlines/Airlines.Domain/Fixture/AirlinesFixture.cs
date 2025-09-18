@@ -271,7 +271,7 @@ public class AirlinesFixture
             DepartureDate = new(2025, 12, 31),
             ArrivalDate = new(2025, 12, 31),
             DepartureTime = new(9, 0),
-            Duration = TimeSpan.FromHours(1),
+            Duration = TimeSpan.FromHours(1.1),
             AirplaneModel = AirplaneModels[4]
         }
     ];
@@ -359,12 +359,12 @@ public class AirlinesFixture
             PassengerInfo = Passengers[0],
             SeatNumber = "12A",
             HandLuggageAvailability = true,
-            TotalBaggageWeight = 15
+            TotalBaggageWeight = 0
         },
         new()
         {
             Id = 2,
-            FlightInfo = Flights[1],
+            FlightInfo = Flights[0],
             PassengerInfo = Passengers[1],
             SeatNumber = "14C",
             HandLuggageAvailability = false,
@@ -382,7 +382,7 @@ public class AirlinesFixture
         new()
         {
             Id = 4,
-            FlightInfo = Flights[3],
+            FlightInfo = Flights[2],
             PassengerInfo = Passengers[3],
             SeatNumber = "1A",
             HandLuggageAvailability = true,
@@ -409,7 +409,7 @@ public class AirlinesFixture
         new()
         {
             Id = 7,
-            FlightInfo = Flights[6],
+            FlightInfo = Flights[5],
             PassengerInfo = Passengers[6],
             SeatNumber = "8C",
             HandLuggageAvailability = true,
