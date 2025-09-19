@@ -9,8 +9,6 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
     [Fact]
     public void TopFiveFlights() // Вывести топ 5 авиарейсов по количеству перевезенных пассажиров.
     {
-
-        // const List<Flight> TopFive = {}
         var topFive = (
             from flight in fixture.Flights
             let passengerCount = (
@@ -24,16 +22,11 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
                 PassengerCount = passengerCount
             }).Take(5).ToList();
 
-        // foreach(var c in topFive)
-        //{
-        // System.Diagnostics.Debug.WriteLine($"Рейс: {c.Flight}; Количество перевезенных пассажиров: {c.PassengetCount}");
-        //Console.WriteLine($"Рейс: {c.Flight}; Количество перевезенных пассажиров: {c.PassengerCount}");
-        // }
-
         Assert.Equal(5, topFive.Count()); // убедились, что 5 элементов в списке
         for (var i = 0; i < topFive.Count() - 1; i++)
         {
-            Assert.True(topFive[i].PassengerCount >= topFive[i + 1].PassengerCount); // тут мы убеждаемся, что в нашем списке, количество пассажиров в каждой строчке такое же или меньше, чем в предыдущей
+            Assert.True(topFive[i].PassengerCount >= topFive[i + 1].PassengerCount); // тут мы убеждаемся, что в нашем списке,
+                                                                                     // количество пассажиров в каждой строчке такое же или меньше, чем в предыдущей
         }
     }
 
@@ -128,7 +121,4 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
 
         Assert.Equal(expectedData, allFlights);
     }
-
-
-
 }
