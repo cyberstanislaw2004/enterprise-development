@@ -170,8 +170,8 @@ public class AirlinesFixture
         {
             Id = 2,
             FlightNumber = "SU101",
-            DepartureAirportCode = "LED",
-            DestinationAirportCode = "SVO",
+            DepartureAirportCode = "SVO",
+            DestinationAirportCode = "LED",
             DepartureDate = new(2025, 10, 2),
             ArrivalDate = new(2025, 10, 2),
             DepartureTime = new(12, 0),
@@ -373,11 +373,11 @@ public class AirlinesFixture
         new()
         {
             Id = 3,
-            FlightInfo = Flights[2],
+            FlightInfo = Flights[0],
             PassengerInfo = Passengers[2],
             SeatNumber = "22B",
             HandLuggageAvailability = true,
-            TotalBaggageWeight = 10
+            TotalBaggageWeight = 0
         },
         new()
         {
