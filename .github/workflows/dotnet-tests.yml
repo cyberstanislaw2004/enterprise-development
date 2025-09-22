@@ -1,31 +1,33 @@
-name: .NET Tests
+name: .Net Tests
 
 on:
-  push:
-    branches: [ "*" ]
   pull_request:
-    branches: [ "lab1" ]
-  workflow_dispatch:
+    types: [opened, reopened, synchronize]
+    branches: 
+      - lab1
+  push:
+    branches:
+      - lab1
 
 jobs:
-  test:
-    name: Run xUnit tests
+  build-and-test:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: '8.0.x'
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
 
-    - name: Restore dependencies
-      run: dotnet restore
+      - name: dotnet restore
+        run: dotnet restore ./Airlines/Airlines.sln
 
-    - name: Build
-      run: dotnet build --no-restore --configuration Release
+      - name: Build solution
+        run: dotnet build ./Airlines/Airlines.sln --no-restore
 
-    - name: Test
-      run: dotnet test --no-build --configuration Release
+      - name: Run tests
+        run: dotnet test ./Airlines/Airlines.Tests/Airlines.Tests.csproj --no-build --verbosity detailed
