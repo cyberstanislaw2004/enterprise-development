@@ -1,6 +1,5 @@
 ﻿using Airlines.Domain;
-using Airlines.Domain.Fixture;
-using System;
+using Airlines.Domain.Dataseeder;
 
 namespace Airlines.Tests;
 
