@@ -28,10 +28,10 @@ public class Ticket
     /// <summary>
     /// Availability of hand luggage
     /// </summary>
-    public required bool? HandLuggageAvailability { get; set; } // 0 - no; 1 - yes
+    public required bool HandLuggageAvailability { get; set; }
 
     /// <summary>
-    /// Total luggage weight
+    /// Total luggage weight in kg
     /// </summary>
     public required double TotalBaggageWeight { get; set; }
 }

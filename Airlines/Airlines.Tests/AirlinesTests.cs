@@ -4,15 +4,18 @@ using System;
 
 namespace Airlines.Tests;
 
-public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixture>
+public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
 {
+    /// <summary>
+    /// Display the top 5 flights by the number of passengers carried.
+    /// </summary>
     [Fact]
-    public void TopFiveFlights() // Вывести топ 5 авиарейсов по количеству перевезенных пассажиров.
+    public void GetTopFiveFlights_WhenFlightsExist_ReturnsFlightsInDescendingPassengerCount()
     {
         var topFive = (
             from flight in fixture.Flights
-            let passengerCount = (
-                from ticket in fixture.Tickets
+            let passengerCount =
+                (from ticket in fixture.Tickets
                 where ticket.FlightInfo == flight
                 select ticket).Count()
             orderby passengerCount descending
@@ -20,18 +23,19 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
             {
                 Flight = flight.FlightNumber,
                 PassengerCount = passengerCount
-            }).Take(5).ToList();
+            })
+            .Take(5)
+            .ToList();
 
-        Assert.Equal(5, topFive.Count()); // убедились, что 5 элементов в списке
-        for (var i = 0; i < topFive.Count() - 1; i++)
-        {
-            Assert.True(topFive[i].PassengerCount >= topFive[i + 1].PassengerCount); // тут мы убеждаемся, что в нашем списке,
-                                                                                     // количество пассажиров в каждой строчке такое же или меньше, чем в предыдущей
-        }
+        Assert.Equal(5, topFive.Count());
+        for (var i = 0; i < topFive.Count() - 1; i++) Assert.True(topFive[i].PassengerCount >= topFive[i + 1].PassengerCount);
     }
 
+    /// <summary>
+    /// Display a list of flights with the minimum travel time.
+    /// </summary>
     [Fact]
-    public void ListOfFlightsWithMinTimeInTravel() // Вывести список рейсов с минимальным временем в пути.
+    public void GetFlightsWithMinDuration_WhenFlightsExist_ReturnsAllWithMinDuration()
     {
         var minDuration = (
             from flight in fixture.Flights
@@ -40,46 +44,50 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
             {
                 Flight = flight.FlightNumber,
                 Duration = flight.Duration
-            }).ToList();
+            })
+            .ToList();
 
         Assert.NotEmpty(minDuration);
 
         var expectedMinDuration = fixture.Flights.Min(f => f.Duration);
 
-        for (var i = 0; i < minDuration.Count(); i++)
-        {
-            Assert.True(minDuration[i].Duration == expectedMinDuration);
-        }
+        for (var i = 0; i < minDuration.Count(); i++) Assert.True(minDuration[i].Duration == expectedMinDuration);
     }
 
+    /// <summary>
+    /// Display information about all passengers flying on the selected flight
+    /// whose baggage weight is zero, sorted by full name.
+    /// </summary>
     [Fact]
-    public void InfoAboutAllPassengers() // Вывести сведения обо всех пассажирах, летящих выбранным рейсом, вес багажа которых равен нулю, упорядочить по ФИО.
+    public void GetPassengersWithZeroBaggage_OnSelectedFlight_ReturnsPassengersOrderedByFullName()
     {
         var selectedFlight = fixture.Flights.First(f => f.FlightNumber == "SU100");
 
         var infoAboutPassenger = (
             from ticket in fixture.Tickets
             where ticket.TotalBaggageWeight == 0
-            && ticket.FlightInfo.FlightNumber == selectedFlight.FlightNumber
+                && ticket.FlightInfo.FlightNumber == selectedFlight.FlightNumber
             orderby ticket.PassengerInfo.FullName
-            select ticket.PassengerInfo).ToList();
+            select ticket.PassengerInfo)
+            .ToList();
 
-        Assert.NotEmpty(infoAboutPassenger); // смотрим что кто то есть
+        Assert.NotEmpty(infoAboutPassenger);
         
         foreach (var passenger in infoAboutPassenger)
         {
-            Assert.Equal(selectedFlight.FlightNumber, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).FlightInfo.FlightNumber); // смотрим что наш летит туда куда надо
-            Assert.Equal(0, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).TotalBaggageWeight); // смотрим что пустой багаж
-        }
-        for (var i = 0; i < infoAboutPassenger.Count() - 1; i++)
-        {
-            Assert.True(string.Compare(infoAboutPassenger[i].FullName, infoAboutPassenger[i + 1].FullName) <= 0); // смотрим что правильно отсортировано
+            Assert.Equal(selectedFlight.FlightNumber, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).FlightInfo.FlightNumber);
+            Assert.Equal(0, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).TotalBaggageWeight);
         }
 
+        for (var i = 0; i < infoAboutPassenger.Count() - 1; i++) Assert.True(string.Compare(infoAboutPassenger[i].FullName, infoAboutPassenger[i + 1].FullName) <= 0);
     }
 
+    /// <summary>
+    /// Display summary information about all flights of aircraft 
+    /// of the selected model during a specified period of time.
+    /// </summary>
     [Fact]
-    public void InfoAboutAllFlightsSelectedModel() // Вывести сводную информацию обо всех полетах самолетов выбранной модели в указанный период времени.
+    public void GetFlightsByModelWithinPeriod_WhenFlightsExist_ReturnsMatchingFlightNumbers()
     {
         var selectedModel = "Il-96-300";
         var startDate = new DateOnly(2025, 10, 10);
@@ -88,9 +96,10 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
         var allFlights = (
             from flight in fixture.Flights
             where flight.AirplaneModel.ModelName == selectedModel
-            && flight.DepartureDate >= startDate
-            && flight.ArrivalDate <= endDate
-            select flight.FlightNumber).ToList();
+                && flight.DepartureDate >= startDate
+                && flight.ArrivalDate <= endDate
+            select flight.FlightNumber)
+            .ToList();
 
         var expectedData = new[]
         {
@@ -101,8 +110,12 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
         Assert.Equal(expectedData, allFlights);
     }
 
+    /// <summary>
+    /// Display information about all flights departing from a specified
+    /// departure point to a specified arrival point.
+    /// </summary>
     [Fact]
-    public void InfoAboutAllFlightsSelectedSpot() // Вывести сведения о всех авиарейсах, вылетевших из указанного пункта отправления в указанный пункт прибытия.
+    public void GetFlightsByDepartureAndDestination_WhenFlightsExist_ReturnsMatchingFlightNumbers()
     {
         var startSpot = "SVO";
         var endSpot = "LED";
@@ -110,7 +123,7 @@ public class AirlinesTests(AirlinesFixture fixture): IClassFixture<AirlinesFixtu
         var allFlights = (
             from flight in fixture.Flights
             where flight.DepartureAirportCode == startSpot
-            && flight.DestinationAirportCode == endSpot
+                && flight.DestinationAirportCode == endSpot
             select flight.FlightNumber).ToList();
 
         var expectedData = new[]

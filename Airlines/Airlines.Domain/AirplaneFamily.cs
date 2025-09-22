@@ -6,12 +6,17 @@
 public class AirplaneFamily
 {
     /// <summary>
+    /// Unique ID for the primary key in the database
+    /// </summary>
+    public required int Id { get; set; }
+
+    /// <summary>
     /// Family name
     /// </summary>
-    public required string NameOfFamily { get; set; }
+    public required string Name { get; set; }
 
     /// <summary>
     /// Manufacturer name
     /// </summary>
-    public required string NameOfManufacturer { get; set; }
+    public required string Manufacturer { get; set; }
 }

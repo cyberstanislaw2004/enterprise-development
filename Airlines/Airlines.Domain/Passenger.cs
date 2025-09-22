@@ -13,7 +13,7 @@ public class Passenger
     /// <summary>
     /// Passport number
     /// </summary>
-    public required string NumberOfPasspotr { get; set; }
+    public required string NumberOfPassport { get; set; }
 
     /// <summary>
     /// Full name

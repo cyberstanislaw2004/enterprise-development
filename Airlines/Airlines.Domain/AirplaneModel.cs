@@ -21,7 +21,7 @@ public class AirplaneModel
     public required AirplaneFamily AirplaneFamily { get; set; }
 
     /// <summary>
-    /// Flight range
+    /// Flight range in km
     /// </summary>
     public required double RangeOfFlight { get; set; }
 
@@ -31,7 +31,7 @@ public class AirplaneModel
     public required int PassengerCapacity { get; set; }
 
     /// <summary>
-    /// Cargo capacity
+    /// Cargo capacity in tons
     /// </summary>
     public required double CargoCapacity { get; set; }
 }
