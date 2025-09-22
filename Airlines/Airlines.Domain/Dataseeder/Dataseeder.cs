@@ -1,6 +1,6 @@
 using Airlines.Domain;
 
-namespace Airlines.Domain.Fixture;
+namespace Airlines.Domain.Dataseeder;
 
 /// <summary>
 /// Dataseed containing instances of classes
