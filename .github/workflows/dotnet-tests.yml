@@ -5,9 +5,11 @@ on:
     types: [opened, reopened, synchronize]
     branches: 
       - lab1
+      - main
   push:
     branches:
       - lab1
+      - main
 
 jobs:
   build-and-test:
