@@ -3,7 +3,7 @@ using Airlines.Infrastructure.InMemory.Dataseeder;
 
 namespace Airlines.Tests;
 
-public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
+public class AirlinesTests(InMemoryRepositoryDataseeder fixture): IClassFixture<InMemoryRepositoryDataseeder>
 {
     /// <summary>
     /// Display the top 5 flights by the number of passengers carried.

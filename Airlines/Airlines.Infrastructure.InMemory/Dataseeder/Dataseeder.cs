@@ -5,7 +5,7 @@ namespace Airlines.Infrastructure.InMemory.Dataseeder;
 /// <summary>
 /// Dataseed containing instances of classes
 /// </summary>
-public class Dataseeder
+public class InMemoryRepositoryDataseeder
 {
     /// <summary>
     /// Instances of the "AirplaneFamily" class
