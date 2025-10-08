@@ -1,5 +1,5 @@
 ﻿using Airlines.Domain;
-using Airlines.Domain.Dataseeder;
+using Airlines.Infrastructure.InMemory.Dataseeder;
 
 namespace Airlines.Tests;
 

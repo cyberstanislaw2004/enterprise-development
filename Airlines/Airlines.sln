@@ -6,6 +6,14 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Domain", "Airlines.Domain\Airlines.Domain.csproj", "{E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Tests", "Airlines.Tests\Airlines.Tests.csproj", "{18034383-8D9B-4B64-A4A8-7CF49BFE7FCD}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D65DBE21-2EA0-401B-AE88-DFEB71BB480E} = {D65DBE21-2EA0-401B-AE88-DFEB71BB480E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastructure.InMemory", "Airlines.Infrastructure.InMemory\Airlines.Infrastructure.InMemory.csproj", "{D65DBE21-2EA0-401B-AE88-DFEB71BB480E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E} = {E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +29,10 @@ Global
 		{18034383-8D9B-4B64-A4A8-7CF49BFE7FCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{18034383-8D9B-4B64-A4A8-7CF49BFE7FCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{18034383-8D9B-4B64-A4A8-7CF49BFE7FCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D65DBE21-2EA0-401B-AE88-DFEB71BB480E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D65DBE21-2EA0-401B-AE88-DFEB71BB480E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D65DBE21-2EA0-401B-AE88-DFEB71BB480E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D65DBE21-2EA0-401B-AE88-DFEB71BB480E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -18,6 +18,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Airlines.Domain\Airlines.Domain.csproj" />
+    <ProjectReference Include="..\Airlines.Infrastructure.InMemory\Airlines.Infrastructure.InMemory.csproj" />
   </ItemGroup>
 
   <ItemGroup>
