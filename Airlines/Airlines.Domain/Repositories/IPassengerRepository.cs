@@ -2,13 +2,13 @@
 
 public interface IPassengerRepository
 {
-    public string Create(Passenger entity);
+    public int Create(Passenger entity);
 
     public List<Passenger> Read();
 
-    public Passenger? Read(string id);
+    public Passenger? Read(int id);
 
-    public Passenger? Update(string id, Passenger entity);
+    public Passenger? Update(int id, Passenger entity);
 
-    public bool Delete(string id);
+    public bool Delete(int id);
 }

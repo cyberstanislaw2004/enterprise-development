@@ -2,13 +2,13 @@
 
 public interface IAirplaneFamilyRepository
 {
-    public string Create(AirplaneFamily entity);
+    public int Create(AirplaneFamily entity);
 
     public List<AirplaneFamily> Read();
 
-    public AirplaneFamily? Read(string id);
+    public AirplaneFamily? Read(int id);
 
-    public AirplaneFamily? Update(string id, AirplaneFamily entity);
+    public AirplaneFamily? Update(int id, AirplaneFamily entity);
 
-    public bool Delete(string id);
+    public bool Delete(int id);
 }

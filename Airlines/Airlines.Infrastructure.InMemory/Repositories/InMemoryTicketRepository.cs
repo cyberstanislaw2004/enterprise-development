@@ -4,34 +4,37 @@ using Airlines.Infrastructure.InMemory.Dataseeder;
 
 namespace Airlines.Infrastructure.InMemory.Repositories;
 
-public class InMemoryAirplaneFamilyRepository : IAirplaneFamilyRepository
+public class InMemoryTicketRepository : ITicketRepository
 {
-    private readonly List<AirplaneFamily> _items = [];
+    private readonly List<Ticket> _items = [];
 
-    public int Create(AirplaneFamily entity)
+    public int Create(Ticket entity)
     {
         entity.Id = IdGenerator.IdNext(_items);
         _items.Add(entity);
         return entity.Id;
     }
 
-    public List<AirplaneFamily> Read()
+    public List<Ticket> Read()
     {
         return _items;
     }
 
-    public AirplaneFamily? Read(int id)
+    public Ticket? Read(int id)
     {
-        return _items.FirstOrDefault(item  => item.Id == id);
+        return _items.FirstOrDefault(item => item.Id == id);
     }
 
-    public AirplaneFamily? Update(int id, AirplaneFamily entity)
+    public Ticket? Update(int id, Ticket entity)
     {
         var existingEntity = Read(id);
         if (existingEntity == null) return null;
-        
-        existingEntity.Name = entity.Name;
-        existingEntity.Manufacturer = entity.Manufacturer;
+
+        existingEntity.FlightInfo = entity.FlightInfo;
+        existingEntity.PassengerInfo = entity.PassengerInfo;
+        existingEntity.SeatNumber = entity.SeatNumber;
+        existingEntity.HandLuggageAvailability = entity.HandLuggageAvailability;
+        existingEntity.TotalBaggageWeight = entity.TotalBaggageWeight;
 
         return existingEntity;
     }
