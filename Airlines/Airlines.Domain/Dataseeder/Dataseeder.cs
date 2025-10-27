@@ -1,6 +1,6 @@
 using Airlines.Domain;
 
-namespace Airlines.Infrastructure.InMemory.Dataseeder;
+namespace Airlines.Domain.Dataseeder;
 
 /// <summary>
 /// Dataseed containing instances of classes
