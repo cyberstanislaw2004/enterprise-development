@@ -2,13 +2,13 @@
 
 public interface IFlightRepository
 {
-    public int Create(Flight entity);
+    public string Create(Flight entity);
 
     public List<Flight> Read();
 
-    public Flight? Read(int id);
+    public Flight? Read(string id);
 
-    public Flight? Update(int id, Flight entity);
+    public Flight? Update(string id, Flight entity);
 
-    public bool Delete(int id);
+    public bool Delete(string id);
 }

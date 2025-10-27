@@ -2,13 +2,13 @@
 
 public interface ITicketRepository
 {
-    public int Create(Ticket entity);
+    public string Create(Ticket entity);
 
     public List<Ticket> Read();
 
-    public Ticket? Read(int id);
+    public Ticket? Read(string id);
 
-    public Ticket? Update(int id, Ticket entity);
+    public Ticket? Update(string id, Ticket entity);
 
-    public bool Delete(int id);
+    public bool Delete(string id);
 }

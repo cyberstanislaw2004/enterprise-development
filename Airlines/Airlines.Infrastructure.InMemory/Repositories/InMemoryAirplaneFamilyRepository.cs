@@ -8,39 +8,12 @@ public class InMemoryAirplaneFamilyRepository : IAirplaneFamilyRepository
 {
     private readonly List<AirplaneFamily> _items = [];
 
-    public int Create(AirplaneFamily entity)
-    {
-        entity.Id = IdGenerator.IdNext(_items);
-        _items.Add(entity);
-        return entity.Id;
-    }
+    private int _currentId = 1;
 
-    public List<AirplaneFamily> Read()
+    public InMemoryAirplaneFamilyRepository(InMemoryRepositoryDataseeder? seeder)
     {
-        return _items;
-    }
+        if (seeder == null) return;
 
-    public AirplaneFamily? Read(int id)
-    {
-        return _items.FirstOrDefault(item  => item.Id == id);
-    }
-
-    public AirplaneFamily? Update(int id, AirplaneFamily entity)
-    {
-        var existingEntity = Read(id);
-        if (existingEntity == null) return null;
-        
-        existingEntity.Name = entity.Name;
-        existingEntity.Manufacturer = entity.Manufacturer;
-
-        return existingEntity;
-    }
-    public bool Delete(int id)
-    {
-        var existingEntity = Read(id);
-        if (existingEntity == null) return false;
-
-        _items.Remove(existingEntity);
-        return true;
+        _items = seeder.AirplaneFamilies;
     }
 }

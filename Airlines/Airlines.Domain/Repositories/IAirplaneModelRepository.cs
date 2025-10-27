@@ -2,13 +2,13 @@
 
 public interface IAirplaneModelRepository
 {
-    public int Create(AirplaneModel entity);
+    public string Create(AirplaneModel entity);
 
     public List<AirplaneModel> Read();
 
-    public AirplaneModel? Read(int id);
+    public AirplaneModel? Read(string id);
 
-    public AirplaneModel? Update(int id, AirplaneModel entity);
+    public AirplaneModel? Update(string id, AirplaneModel entity);
 
-    public bool Delete(int id);
+    public bool Delete(string id);
 }
