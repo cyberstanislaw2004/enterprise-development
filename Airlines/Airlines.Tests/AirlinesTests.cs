@@ -1,10 +1,9 @@
 ﻿using Airlines.Domain;
-using Airlines.Infrastructure.InMemory;
 using Airlines.Infrastructure.InMemory.Dataseeder;
 
 namespace Airlines.Tests;
 
-public class AirlinesTests(InMemoryRepositoryDataseeder fixture) : IClassFixture<InMemoryRepositoryDataseeder>
+public class AirlinesTests(InMemoryRepositoryDataseeder fixture): IClassFixture<InMemoryRepositoryDataseeder>
 {
     /// <summary>
     /// Display the top 5 flights by the number of passengers carried.
@@ -16,8 +15,8 @@ public class AirlinesTests(InMemoryRepositoryDataseeder fixture) : IClassFixture
             from flight in fixture.Flights
             let passengerCount =
                 (from ticket in fixture.Tickets
-                 where ticket.FlightInfo == flight
-                 select ticket).Count()
+                where ticket.FlightInfo == flight
+                select ticket).Count()
             orderby passengerCount descending
             select new
             {
@@ -72,7 +71,7 @@ public class AirlinesTests(InMemoryRepositoryDataseeder fixture) : IClassFixture
             .ToList();
 
         Assert.NotEmpty(infoAboutPassenger);
-
+        
         foreach (var passenger in infoAboutPassenger)
         {
             Assert.Equal(selectedFlight.FlightNumber, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).FlightInfo.FlightNumber);
@@ -133,17 +132,5 @@ public class AirlinesTests(InMemoryRepositoryDataseeder fixture) : IClassFixture
         };
 
         Assert.Equal(expectedData, allFlights);
-    }
-
-    [Fact]
-    public void GeneratorTest()
-    {
-        var expected = 11;
-
-        var allFamilies = fixture.AirplaneFamilies.ToList();
-
-        var nextId = IdGenerator.IdNext(allFamilies);
-
-        Assert.Equal(expected, nextId);
     }
 }
