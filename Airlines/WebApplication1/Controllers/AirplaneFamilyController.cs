@@ -4,19 +4,31 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Airlines.Api.Controllers;
 
+/// <summary>
+/// Controller for managing aircraft families
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class AirplaneFamilyController : ControllerBase
 {
     private readonly AirplaneFamilyService _service;
 
+    /// <summary>
+    /// Initializes the controller
+    /// </summary>
     public AirplaneFamilyController(AirplaneFamilyService service) =>
         _service = service;
 
+    /// <summary>
+    /// Returns a list of all airplane families
+    /// </summary>
     [HttpGet]
     public IActionResult GetAll() =>
         Ok(_service.GetAirplaneFamilies());
 
+    /// <summary>
+    /// Returns information about airplane family by id
+    /// </summary>
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
@@ -25,6 +37,9 @@ public class AirplaneFamilyController : ControllerBase
         return Ok(entity);
     }
 
+    /// <summary>
+    /// Create a new airplane family
+    /// </summary>
     [HttpPost]
     public IActionResult Create([FromBody] AirplaneFamilyCreateDto dto)
     {
@@ -32,6 +47,9 @@ public class AirplaneFamilyController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id }, dto);
     }
 
+    /// <summary>
+    /// Update airplane family by ID
+    /// </summary>
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] AirplaneFamilyCreateDto dto)
     {
@@ -40,6 +58,9 @@ public class AirplaneFamilyController : ControllerBase
         return Ok(updated);
     }
 
+    /// <summary>
+    /// Delete airplane family by ID
+    /// </summary>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

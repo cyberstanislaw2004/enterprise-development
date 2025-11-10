@@ -4,8 +4,14 @@ using Airlines.Domain.Repositories;
 
 namespace Airlines.Application.Services;
 
+/// <summary>
+/// Service for managing passengers entities
+/// </summary>
 public class TicketService(IRepository<Ticket> repository)
 {
+    /// <summary>
+    /// Converts create DTO to entity
+    /// </summary>
     private static Ticket MapDto(TicketCreateDto entity, Flight flight, Passenger passenger)
     {
         return new Ticket
@@ -19,6 +25,9 @@ public class TicketService(IRepository<Ticket> repository)
         };
     }
 
+    /// <summary>
+    /// Converts entity to read DTO
+    /// </summary>
     private static TicketReadDto MapReadDto(Ticket entity) =>
         new(
             entity.Id,
@@ -55,12 +64,21 @@ public class TicketService(IRepository<Ticket> repository)
             entity.TotalBaggageWeight
         );
 
+    /// <summary>
+    /// Create a new ticket record
+    /// </summary>
     public int CreateTicket(TicketCreateDto entity, Flight flight, Passenger passenger) =>
         repository.Create(MapDto(entity, flight, passenger));
 
+    /// <summary>
+    /// Get all tickets
+    /// </summary>
     public List<TicketReadDto> GetTickets() =>
         repository.Read().Select(MapReadDto).ToList();
 
+    /// <summary>
+    /// Get ticket by ID
+    /// </summary>
     public TicketReadDto? GetTicket(int id)
     {
         var entity = repository.Read(id);
@@ -71,9 +89,15 @@ public class TicketService(IRepository<Ticket> repository)
             return MapReadDto(entity);
     }
 
+    /// <summary>
+    /// Update ticket by ID
+    /// </summary>
     public Ticket? UpdateTicket(int id, TicketCreateDto entity, Flight flight, Passenger passenger) =>
         repository.Update(id, MapDto(entity, flight, passenger));
 
+    /// <summary>
+    /// Delete ticket by ID
+    /// </summary>
     public bool DeleteTicket(int id) =>
         repository.Delete(id);
 }

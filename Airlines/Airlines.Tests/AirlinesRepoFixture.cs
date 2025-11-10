@@ -4,6 +4,9 @@ using Airlines.Domain.Dataseeder;
 
 namespace Airlines.Tests;
 
+/// <summary>
+/// Fixture for unit tests nitializes services with inMemory repositories with test data
+/// </summary>
 public class AirlinesRepoFixture
 {
     public AirplaneFamilyService AirplaneFamilyService { get; }
@@ -12,6 +15,9 @@ public class AirlinesRepoFixture
     public PassengerService PassengerService { get; }
     public TicketService TicketService { get; }
 
+    /// <summary>
+    /// Configure all services
+    /// </summary>
     public AirlinesRepoFixture()
     {
         var dataseeder = new Dataseeder();

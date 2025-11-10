@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Airlines.Api.Controllers;
 
+/// <summary>
+/// Controller for managing flights
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class FlightController : ControllerBase
@@ -13,6 +16,9 @@ public class FlightController : ControllerBase
     private readonly FlightService _service;
     private readonly IRepository<AirplaneModel> _modelRepository;
 
+    /// <summary>
+    /// Initializes the controller
+    /// </summary>
     public FlightController(
         FlightService service,
         IRepository<AirplaneModel> modelRepository)
@@ -21,10 +27,16 @@ public class FlightController : ControllerBase
         _modelRepository = modelRepository;
     }
 
+    /// <summary>
+    /// Returns a list of all flights
+    /// </summary>
     [HttpGet]
     public IActionResult GetAll() =>
         Ok(_service.GetFlights());
 
+    /// <summary>
+    /// Returns information about flight by id
+    /// </summary>
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
@@ -33,6 +45,9 @@ public class FlightController : ControllerBase
         return Ok(entity);
     }
 
+    /// <summary>
+    /// Create a new flight
+    /// </summary>
     [HttpPost]
     public IActionResult Create([FromBody] FlightCreateDto dto)
     {
@@ -44,6 +59,9 @@ public class FlightController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id }, dto);
     }
 
+    /// <summary>
+    /// Update flight by ID
+    /// </summary>
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] FlightCreateDto dto)
     {
@@ -56,6 +74,9 @@ public class FlightController : ControllerBase
         return Ok(updated);
     }
 
+    /// <summary>
+    /// Delete flight by ID
+    /// </summary>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

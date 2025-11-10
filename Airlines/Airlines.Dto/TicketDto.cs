@@ -1,5 +1,8 @@
 ﻿namespace Airlines.Dto;
 
+/// <summary>
+/// DTO for create
+/// </summary>
 public record TicketCreateDto(
     FlightCreateDto FlightInfo,
     PassengerCreateDto PassengerInfo,
@@ -10,6 +13,9 @@ public record TicketCreateDto(
     int PassengerId
 );
 
+/// <summary>
+/// DTO for read
+/// </summary>
 public record TicketReadDto(
     int Id,
     FlightReadDto FlightInfo,

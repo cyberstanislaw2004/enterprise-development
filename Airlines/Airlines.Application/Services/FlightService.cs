@@ -4,8 +4,14 @@ using Airlines.Domain.Repositories;
 
 namespace Airlines.Application.Services;
 
+/// <summary>
+/// Service for managing flights entities
+/// </summary>
 public class FlightService(IRepository<Flight> repository)
 {
+    /// <summary>
+    /// Converts create DTO to entity
+    /// </summary>
     private static Flight MapDto(FlightCreateDto entity, AirplaneModel model)
     {
         return new Flight
@@ -22,6 +28,9 @@ public class FlightService(IRepository<Flight> repository)
         };
     }
 
+    /// <summary>
+    /// Converts entity to read DTO
+    /// </summary>
     private static FlightReadDto MapReadDto(Flight entity) =>
         new(
         entity.Id,
@@ -46,12 +55,21 @@ public class FlightService(IRepository<Flight> repository)
         )
     );
 
+    /// <summary>
+    /// Create a new flight record
+    /// </summary>
     public int CreateFlight(FlightCreateDto entity, AirplaneModel model) =>
         repository.Create(MapDto(entity, model));
 
+    /// <summary>
+    /// Get all flights
+    /// </summary>
     public List<FlightReadDto> GetFlights() =>
         repository.Read().Select(MapReadDto).ToList();
 
+    /// <summary>
+    /// Get flight by ID
+    /// </summary>
     public FlightReadDto? GetFlight(int id)
     {
         var entity = repository.Read(id);
@@ -62,9 +80,15 @@ public class FlightService(IRepository<Flight> repository)
             return MapReadDto(entity);
     }
 
+    /// <summary>
+    /// Update flight by ID
+    /// </summary>
     public Flight? UpdateFlight(int id, FlightCreateDto entity, AirplaneModel model) =>
         repository.Update(id, MapDto(entity, model));
 
+    /// <summary>
+    /// Delete flight by ID
+    /// </summary>
     public bool DeleteFlight(int id) =>
         repository.Delete(id);
 }

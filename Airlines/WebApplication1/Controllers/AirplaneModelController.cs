@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Airlines.Api.Controllers;
 
+/// <summary>
+/// Controller for managing aircraft models
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class AirplaneModelController : ControllerBase
@@ -13,6 +16,9 @@ public class AirplaneModelController : ControllerBase
     private readonly AirplaneModelService _service;
     private readonly IRepository<AirplaneFamily> _familyRepository;
 
+    /// <summary>
+    /// Initializes the controller
+    /// </summary>
     public AirplaneModelController(
         AirplaneModelService service,
         IRepository<AirplaneFamily> familyRepository)
@@ -21,10 +27,16 @@ public class AirplaneModelController : ControllerBase
         _familyRepository = familyRepository;
     }
 
+    /// <summary>
+    /// Returns a list of all airplane models
+    /// </summary>
     [HttpGet]
     public IActionResult GetAll() =>
         Ok(_service.GetAirplaneModels());
 
+    /// <summary>
+    /// Returns information about airplane model by id
+    /// </summary>
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
@@ -33,6 +45,9 @@ public class AirplaneModelController : ControllerBase
         return Ok(entity);
     }
 
+    /// <summary>
+    /// Create a new airplane model
+    /// </summary>
     [HttpPost]
     public IActionResult Create([FromBody] AirplaneModelCreateDto dto)
     {
@@ -62,6 +77,9 @@ public class AirplaneModelController : ControllerBase
         return CreatedAtAction(nameof(Get), new { id }, dto);
     }
 
+    /// <summary>
+    /// Update airplane model by ID
+    /// </summary>
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] AirplaneModelCreateDto dto)
     {
@@ -92,6 +110,9 @@ public class AirplaneModelController : ControllerBase
         return Ok(updated);
     }
 
+    /// <summary>
+    /// Delete airplane model by ID
+    /// </summary>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

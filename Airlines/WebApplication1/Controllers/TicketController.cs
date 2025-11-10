@@ -6,6 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Airlines.Api.Controllers;
 
+/// <summary>
+/// Controller for managing tickets
+/// </summary>
 [ApiController]
 [Route("api/[controller]")]
 public class TicketController : Controller
@@ -14,6 +17,9 @@ public class TicketController : Controller
     private readonly IRepository<Flight> _flightRepository;
     private readonly IRepository<Passenger> _passengerRepository;
 
+    /// <summary>
+    /// Initializes the controller
+    /// </summary>
     public TicketController(
         TicketService service,
         IRepository<Flight> flightRepository,
@@ -24,10 +30,16 @@ public class TicketController : Controller
         _passengerRepository = passengerRepository;
     }
 
+    /// <summary>
+    /// Returns a list of all tickets
+    /// </summary>
     [HttpGet]
     public IActionResult GetAll() =>
         Ok(_service.GetTickets());
 
+    /// <summary>
+    /// Returns information about ticket by id
+    /// </summary>
     [HttpGet("{id}")]
     public IActionResult Get(int id)
     {
@@ -36,6 +48,9 @@ public class TicketController : Controller
         return Ok(entity);
     }
 
+    /// <summary>
+    /// Create a new ticket
+    /// </summary>
     [HttpPost]
     public IActionResult Create([FromBody] TicketCreateDto dto)
     {
@@ -49,6 +64,9 @@ public class TicketController : Controller
         return CreatedAtAction(nameof(Get), new { id }, dto);
     }
 
+    /// <summary>
+    /// Update ticket by ID
+    /// </summary>
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] TicketCreateDto dto)
     {
@@ -63,6 +81,9 @@ public class TicketController : Controller
         return Ok(updated);
     }
 
+    /// <summary>
+    /// Delete ticket by ID
+    /// </summary>
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {

@@ -3,13 +3,29 @@ using Airlines.Domain.Dataseeder;
 
 namespace Airlines.Infrastructure.InMemory.Repositories;
 
+/// <summary>
+/// InMemory repository for managing Flight entities
+/// </summary>
 public class InMemoryFlightRepository : InMemoryRepository<Flight>
 {
+    /// <summary>
+    /// Initialize the repository
+    /// </summary>
     public InMemoryFlightRepository(Dataseeder? seeder) : base(seeder?.Flights) { }
 
+    /// <summary>
+    /// Get ID of entity
+    /// </summary>
     protected override int GetId(Flight entity) => entity.Id;
+
+    /// <summary>
+    /// Set ID of entity
+    /// </summary>
     protected override void SetId(Flight entity, int id) => entity.Id = id;
 
+    /// <summary>
+    /// Update Flight entity by ID
+    /// </summary>
     public override Flight? Update(int id, Flight entity)
     {
         var existingEntity = Read(id);

@@ -1,5 +1,8 @@
 ﻿namespace Airlines.Dto;
 
+/// <summary>
+/// DTO for create
+/// </summary>
 public record FlightCreateDto(
     string FlightNumber,
     string DepartureAirportCode,
@@ -12,6 +15,9 @@ public record FlightCreateDto(
     int AirplaneModelId
 );
 
+/// <summary>
+/// DTO for read
+/// </summary>
 public record FlightReadDto(
     int Id,
     string FlightNumber,
