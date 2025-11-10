@@ -1,12 +1,12 @@
-﻿using Airlines.Application.Dto;
+﻿using Airlines.Dto;
 using Airlines.Domain;
 using Airlines.Domain.Repositories;
 
 namespace Airlines.Application.Services;
 
-public class AirplaneModelService(IAirplaneModelRepository repository)
+public class AirplaneModelService(IRepository<AirplaneModel> repository)
 {
-    private static AirplaneModel MapDto(AirplaneModelDto entity, AirplaneFamily family)
+    private static AirplaneModel MapDto(AirplaneModelCreateDto entity, AirplaneFamily family)
     {
         return new AirplaneModel
         {
@@ -19,28 +19,35 @@ public class AirplaneModelService(IAirplaneModelRepository repository)
         };
     }
 
-    public int CreateAirplaneModel(AirplaneModelDto entity, AirplaneFamily family)
+    private static AirplaneModelReadDto MapReadDto(AirplaneModel entity) =>
+        new(
+            entity.Id,
+            entity.ModelName,
+            new AirplaneFamilyReadDto(entity.AirplaneFamily.Id, entity.AirplaneFamily.Name, entity.AirplaneFamily.Manufacturer),
+            entity.RangeOfFlight,
+            entity.PassengerCapacity,
+            entity.CargoCapacity
+            );
+
+    public int CreateAirplaneModel(AirplaneModelCreateDto entity, AirplaneFamily family) =>
+        repository.Create(MapDto(entity, family));
+
+    public List<AirplaneModelReadDto> GetAirplaneModels() =>
+        repository.Read().Select(MapReadDto).ToList();
+
+    public AirplaneModelReadDto? GetAirplaneModel(int id)
     {
-        return repository.Create(MapDto(entity, family));
+        var entity = repository.Read(id);
+
+        if (entity == null)
+            return null;
+        else
+            return MapReadDto(entity);
     }
 
-    public List<AirplaneModel> GetAirplaneModels()
-    {
-        return repository.Read();
-    }
+    public AirplaneModel? UpdateAirplaneModel(int id, AirplaneModelCreateDto entity, AirplaneFamily family) =>
+        repository.Update(id, MapDto(entity, family));
 
-    public AirplaneModel? GetAirplaneModel(int id)
-    {
-        return repository.Read(id);
-    }
-
-    public AirplaneModel? UpdateAirplaneModel(int id, AirplaneModelDto entity, AirplaneFamily family)
-    {
-        return repository.Update(id, MapDto(entity, family));
-    }
-
-    public bool DeleteAirplaneModel(int id)
-    {
-        return repository.Delete(id);
-    }
+    public bool DeleteAirplaneModel(int id) =>
+        repository.Delete(id);
 }

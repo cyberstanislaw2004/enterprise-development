@@ -1,12 +1,12 @@
-﻿using Airlines.Application.Dto;
+﻿using Airlines.Dto;
 using Airlines.Domain;
 using Airlines.Domain.Repositories;
 
 namespace Airlines.Application.Services;
 
-public class PassengerService(IPassengerRepository repository)
+public class PassengerService(IRepository<Passenger> repository)
 {
-    private static Passenger MapDto(PassengerDto entity)
+    private static Passenger MapDto(PassengerCreateDto entity)
     {
         return new Passenger
         {
@@ -17,28 +17,28 @@ public class PassengerService(IPassengerRepository repository)
         };
     }
 
-    public int CreatePassenger(PassengerDto entity)
+    private static PassengerReadDto MapReadDto(Passenger entity) =>
+        new(entity.Id, entity.NumberOfPassport, entity.FullName, entity.BirthDate);
+
+    public int CreatePassenger(PassengerCreateDto entity) =>
+        repository.Create(MapDto(entity));
+
+    public List<PassengerReadDto> GetPassengers() =>
+        repository.Read().Select(MapReadDto).ToList();
+
+    public PassengerReadDto? GetPassenger(int id)
     {
-        return repository.Create(MapDto(entity));
+        var entity = repository.Read(id);
+
+        if (entity == null)
+            return null;
+        else
+            return MapReadDto(entity);
     }
 
-    public List<Passenger> GetPassengers()
-    {
-        return repository.Read();
-    }
+    public Passenger? UpdatePassenger(int id, PassengerCreateDto entity) =>
+        repository.Update(id, MapDto(entity));
 
-    public Passenger? GetPassenger(int id)
-    {
-        return repository.Read(id);
-    }
-
-    public Passenger? UpdatePassenger(int id, PassengerDto entity)
-    {
-        return repository.Update(id, MapDto(entity));
-    }
-
-    public bool DeletePassenger(int id)
-    {
-        return repository.Delete(id);
-    }
+    public bool DeletePassenger(int id) =>
+        repository.Delete(id);
 }

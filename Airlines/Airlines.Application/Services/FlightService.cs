@@ -1,12 +1,12 @@
-﻿using Airlines.Application.Dto;
+﻿using Airlines.Dto;
 using Airlines.Domain;
 using Airlines.Domain.Repositories;
 
 namespace Airlines.Application.Services;
 
-public class FlightService(IFlightRepository repository)
+public class FlightService(IRepository<Flight> repository)
 {
-    private static Flight MapDto(FlightDto entity, AirplaneModel model)
+    private static Flight MapDto(FlightCreateDto entity, AirplaneModel model)
     {
         return new Flight
         {
@@ -22,28 +22,49 @@ public class FlightService(IFlightRepository repository)
         };
     }
 
-    public int CreateAirplaneFamily(FlightDto entity, AirplaneModel model)
+    private static FlightReadDto MapReadDto(Flight entity) =>
+        new(
+        entity.Id,
+        entity.FlightNumber,
+        entity.DepartureAirportCode,
+        entity.DestinationAirportCode,
+        entity.DepartureDate,
+        entity.ArrivalDate,
+        entity.DepartureTime,
+        entity.Duration,
+        new AirplaneModelReadDto(
+            entity.AirplaneModel.Id,
+            entity.AirplaneModel.ModelName,
+            new AirplaneFamilyReadDto(
+                entity.AirplaneModel.AirplaneFamily.Id,
+                entity.AirplaneModel.AirplaneFamily.Name,
+                entity.AirplaneModel.AirplaneFamily.Manufacturer
+            ),
+            entity.AirplaneModel.RangeOfFlight,
+            entity.AirplaneModel.PassengerCapacity,
+            entity.AirplaneModel.CargoCapacity
+        )
+    );
+
+    public int CreateFlight(FlightCreateDto entity, AirplaneModel model) =>
+        repository.Create(MapDto(entity, model));
+
+    public List<FlightReadDto> GetFlights() =>
+        repository.Read().Select(MapReadDto).ToList();
+
+    public FlightReadDto? GetFlight(int id)
     {
-        return repository.Create(MapDto(entity, model));
+        var entity = repository.Read(id);
+
+        if (entity == null)
+            return null;
+        else
+            return MapReadDto(entity);
     }
 
-    public List<Flight> GetFlights()
-    {
-        return repository.Read();
-    }
+    public Flight? UpdateFlight(int id, FlightCreateDto entity, AirplaneModel model) =>
+        repository.Update(id, MapDto(entity, model));
 
-    public Flight? GetFlight(int id)
-    {
-        return repository.Read(id);
-    }
-
-    public Flight? UpdateFlight(int id, FlightDto entity, AirplaneModel model)
-    {
-        return repository.Update(id, MapDto(entity, model));
-    }
-
-    public bool DeleteFlight(int id)
-    {
-        return repository.Delete(id);
-    }
+    public bool DeleteFlight(int id) =>
+        repository.Delete(id);
 }
