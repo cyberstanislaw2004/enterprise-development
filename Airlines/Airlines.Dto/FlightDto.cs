@@ -8,7 +8,8 @@ public record FlightCreateDto(
     DateOnly? ArrivalDate,
     TimeOnly? DepartureTime,
     TimeSpan? Duration,
-    AirplaneModelCreateDto AirplaneModel
+    AirplaneModelCreateDto AirplaneModel,
+    int AirplaneModelId
 );
 
 public record FlightReadDto(

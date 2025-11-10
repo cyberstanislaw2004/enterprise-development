@@ -2,6 +2,7 @@
 
 public record AirplaneModelCreateDto(
     string ModelName,
+    int? FamilyId,
     AirplaneFamilyCreateDto AirplaneFamily,
     double RangeOfFlight,
     int PassengerCapacity,

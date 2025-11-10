@@ -5,7 +5,9 @@ public record TicketCreateDto(
     PassengerCreateDto PassengerInfo,
     string SeatNumber,
     bool HandLuggageAvailability,
-    double TotalBaggageWeight
+    double TotalBaggageWeight,
+    int FlightId,
+    int PassengerId
 );
 
 public record TicketReadDto(

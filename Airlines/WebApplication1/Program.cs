@@ -16,6 +16,10 @@ builder.Services.AddSingleton<IRepository<Passenger>, InMemoryPassengerRepositor
 builder.Services.AddSingleton<IRepository<Ticket>, InMemoryTicketRepository>();
 
 builder.Services.AddScoped<AirplaneFamilyService>();
+builder.Services.AddScoped<AirplaneModelService>();
+builder.Services.AddScoped<FlightService>();
+builder.Services.AddScoped<PassengerService>();
+builder.Services.AddScoped<TicketService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
