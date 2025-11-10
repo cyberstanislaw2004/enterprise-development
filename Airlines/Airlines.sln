@@ -11,7 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Dto", "Airlines.Dt
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Application", "Airlines.Application\Airlines.Application.csproj", "{C00FC76F-D187-4238-897A-831ECDC0E9EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastucture.InMemory", "Airlines.Infrastucture.InMemory\Airlines.Infrastucture.InMemory.csproj", "{E9E24D61-05E4-47D7-88ED-4AE92FE05686}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastructure.InMemory", "Airlines.Infrastucture.InMemory\Airlines.Infrastructure.InMemory.csproj", "{E9E24D61-05E4-47D7-88ED-4AE92FE05686}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E} = {E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
