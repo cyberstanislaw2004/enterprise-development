@@ -12,12 +12,16 @@ namespace Airlines.Api.Controllers;
 public class AirplaneFamilyController : ControllerBase
 {
     private readonly AirplaneFamilyService _service;
+    private readonly AirplaneModelService _modelService;
 
     /// <summary>
     /// Initializes the controller
     /// </summary>
-    public AirplaneFamilyController(AirplaneFamilyService service) =>
+    public AirplaneFamilyController(AirplaneFamilyService service, AirplaneModelService modelService)
+    {
         _service = service;
+        _modelService = modelService;
+    }
 
     /// <summary>
     /// Returns a list of all airplane families
@@ -35,6 +39,23 @@ public class AirplaneFamilyController : ControllerBase
         var entity = _service.GetAirplaneFamily(id);
         if (entity == null) return NotFound();
         return Ok(entity);
+    }
+
+    /// <summary>
+    /// Returns airplane models for family
+    /// </summary>
+    [HttpGet("{id}/models")]
+    public IActionResult GetModels(int id)
+    {
+        var family = _service.GetAirplaneFamily(id);
+        if (family == null) return NotFound();
+
+        var models = _modelService
+            .GetAirplaneModels()
+            .Where(m => m.AirplaneFamily.Id == id)
+            .ToList();
+
+        return Ok(models);
     }
 
     /// <summary>
@@ -64,8 +85,7 @@ public class AirplaneFamilyController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var deleted = _service.DeleteAirplaneFamily(id);
-        if (!deleted) return NotFound();
+        _service.DeleteAirplaneFamily(id);
         return NoContent();
     }
 }

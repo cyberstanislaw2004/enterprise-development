@@ -66,9 +66,7 @@ public class PassengerController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var deleted = _service.DeletePassenger(id);
-        if (!deleted)
-            return NotFound();
+        _service.DeletePassenger(id);
         return NoContent();
     }
 }

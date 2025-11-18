@@ -51,27 +51,13 @@ public class AirplaneModelController : ControllerBase
     [HttpPost]
     public IActionResult Create([FromBody] AirplaneModelCreateDto dto)
     {
-        AirplaneFamily family;
+        if (!dto.FamilyId.HasValue)
+            return BadRequest("You must specify FamilyId");
 
-        if (dto.FamilyId.HasValue)
-        {
-            family = _familyRepository.Read(dto.FamilyId.Value);
-            if (family == null)
-                return BadRequest("Invalid AirplaneFamily ID");
-        }
-        else if (dto.AirplaneFamily != null)
-        {
-            family = new AirplaneFamily
-            {
-                Id = 0,
-                Name = dto.AirplaneFamily.Name,
-                Manufacturer = dto.AirplaneFamily.Manufacturer
-            };
-        }
-        else
-        {
-            return BadRequest("You must specify FamilyId or AirplaneFamily");
-        }
+        var family = _familyRepository.Read(dto.FamilyId.Value);
+
+        if (family == null)
+            return BadRequest("Invalid AirplaneFamily ID");
 
         var id = _service.CreateAirplaneModel(dto, family);
         return CreatedAtAction(nameof(Get), new { id }, dto);
@@ -83,27 +69,13 @@ public class AirplaneModelController : ControllerBase
     [HttpPut("{id}")]
     public IActionResult Update(int id, [FromBody] AirplaneModelCreateDto dto)
     {
-        AirplaneFamily family;
+        if (!dto.FamilyId.HasValue)
+            return BadRequest("You must specify FamilyId");
 
-        if (dto.FamilyId.HasValue)
-        {
-            family = _familyRepository.Read(dto.FamilyId.Value);
-            if (family == null)
-                return BadRequest("Invalid AirplaneFamily ID");
-        }
-        else if (dto.AirplaneFamily != null)
-        {
-            family = new AirplaneFamily
-            {
-                Id = 0,
-                Name = dto.AirplaneFamily.Name,
-                Manufacturer = dto.AirplaneFamily.Manufacturer
-            };
-        }
-        else
-        {
-            return BadRequest("You must specify FamilyId or AirplaneFamily");
-        }
+        var family = _familyRepository.Read(dto.FamilyId.Value);
+
+        if (family == null)
+            return BadRequest("Invalid AirplaneFamily ID");
 
         var updated = _service.UpdateAirplaneModel(id, dto, family);
         if (updated == null) return NotFound();
@@ -116,8 +88,7 @@ public class AirplaneModelController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var deleted = _service.DeleteAirplaneModel(id);
-        if (!deleted) return NotFound();
+        _service.DeleteAirplaneModel(id);
         return NoContent();
     }
 }

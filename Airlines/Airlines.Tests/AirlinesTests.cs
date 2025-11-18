@@ -3,6 +3,9 @@ using Airlines.Domain.Dataseeder;
 
 namespace Airlines.Tests;
 
+/// <summary>
+/// Unit Tests for Airlines domain
+/// </summary>
 public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
 {
     /// <summary>

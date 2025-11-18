@@ -9,10 +9,29 @@ namespace Airlines.Tests;
 /// </summary>
 public class AirlinesRepoFixture
 {
+    /// <summary>
+    /// Service for managing airplane families
+    /// </summary>
     public AirplaneFamilyService AirplaneFamilyService { get; }
+
+    /// <summary>
+    /// Service for managing airplane models
+    /// </summary>
     public AirplaneModelService AirplaneModelService { get; }
+
+    /// <summary>
+    /// Service for managing flights
+    /// </summary>
     public FlightService FlightService { get; }
+
+    /// <summary>
+    /// Service for managing passengers
+    /// </summary>
     public PassengerService PassengerService { get; }
+
+    /// <summary>
+    /// Service for managing tickets
+    /// </summary>
     public TicketService TicketService { get; }
 
     /// <summary>
@@ -27,7 +46,6 @@ public class AirlinesRepoFixture
         var flightRepository = new InMemoryFlightRepository(dataseeder);
         var passengerRepository = new InMemoryPassengerRepository(dataseeder);
         var ticketRepository = new InMemoryTicketRepository(dataseeder);
-
 
         AirplaneFamilyService = new AirplaneFamilyService(airplaneFamilyRepository);
         AirplaneModelService = new AirplaneModelService(airplaneModelRepository);

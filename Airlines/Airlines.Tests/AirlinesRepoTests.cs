@@ -1,9 +1,13 @@
 ﻿namespace Airlines.Tests;
 
+/// <summary>
+/// Unit Tests for Airlines repository
+/// </summary>
 public class AirlinesRepoTests(AirlinesRepoFixture fixture) : IClassFixture<AirlinesRepoFixture>
 {
-    //private readonly AirlinesRepoFixture _fixture;
-
+    /// <summary>
+    /// Display the top 5 flights by the number of passengers carried.
+    /// </summary>
     [Fact]
     public void GetTopFiveFlights_WhenFlightsExist_ReturnsFlightsInDescendingPassengerCount()
     {

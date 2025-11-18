@@ -87,8 +87,7 @@ public class TicketController : Controller
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var deleted = _service.DeleteTicket(id);
-        if (!deleted) return NotFound();
+        _service.DeleteTicket(id);
         return NoContent();
     }
 }

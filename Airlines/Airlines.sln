@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastructure.InM
 		{E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E} = {E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Api", "WebApplication1\Airlines.Api.csproj", "{0E7E5911-EAEE-48DB-AACA-4B29F0D764DF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Api", "Airlines.Api\Airlines.Api.csproj", "{0E7E5911-EAEE-48DB-AACA-4B29F0D764DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

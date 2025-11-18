@@ -80,8 +80,7 @@ public class FlightController : ControllerBase
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        var deleted = _service.DeleteFlight(id);
-        if (!deleted) return NotFound();
+        _service.DeleteFlight(id);
         return NoContent();
     }
 }
