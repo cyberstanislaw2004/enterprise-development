@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <Sdk Name="Aspire.AppHost.Sdk" Version="9.3.1" />
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UserSecretsId>e10b3d55-691c-487e-8630-fce1b900710e</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.0.0" />
+    <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Airlines.Api\Airlines.Api.csproj" />
+    <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" />
+  </ItemGroup>
+
+</Project>

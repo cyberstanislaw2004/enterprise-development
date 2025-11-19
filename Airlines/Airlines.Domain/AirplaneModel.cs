@@ -23,7 +23,7 @@ public class AirplaneModel
     /// <summary>
     /// Model family
     /// </summary>
-    public required AirplaneFamily AirplaneFamily { get; set; }
+    public required AirplaneFamily? AirplaneFamily { get; set; }
 
     /// <summary>
     /// Flight range in km

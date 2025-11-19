@@ -4,8 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Airlines.Infrastructure.Db.Repositories;
 
+/// <summary>
+/// Repository for managing Flight entities in the database
+/// </summary>
 public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
 {
+    /// <summary>
+    /// Create a new Flight record
+    /// </summary>
     public int Create(Flight entity)
     {
         dbContext.Flights.Add(entity);
@@ -13,6 +19,9 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
         return entity.Id;
     }
 
+    /// <summary>
+    /// Return all Flight records
+    /// </summary>
     public List<Flight> Read()
     {
         return dbContext.Flights
@@ -22,6 +31,9 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
             .ToList();
     }
 
+    /// <summary>
+    /// Return Flight by ID
+    /// </summary>
     public Flight? Read(int id)
     {
         return dbContext.Flights
@@ -31,6 +43,9 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
             .FirstOrDefault(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Update Flight by ID
+    /// </summary>
     public Flight? Update(int id, Flight entity)
     {
         var existingEntity = dbContext.Flights.Find(id);
@@ -52,6 +67,9 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
         return existingEntity;
     }
 
+    /// <summary>
+    /// Delete Flight by ID
+    /// </summary>
     public bool Delete(int id)
     {
         var existingEntity = dbContext.Flights.Find(id);

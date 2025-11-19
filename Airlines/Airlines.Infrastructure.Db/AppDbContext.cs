@@ -5,14 +5,39 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Airlines.Infrastructure.Db;
 
+/// <summary>
+/// EF Core DbContext for the application
+/// </summary>
 public class AppDbContext(DbContextOptions options) : DbContext(options)
 {
+    /// <summary>
+    /// DbSet for airplane families
+    /// </summary>
     public DbSet<AirplaneFamily> AirplaneFamilies { get; set; }
+
+    /// <summary>
+    /// DbSet for airplane models
+    /// </summary>
     public DbSet<AirplaneModel> AirplaneModels { get; set; }
+
+    /// <summary>
+    /// DbSet for flights
+    /// </summary>
     public DbSet<Flight> Flights { get; set; }
+
+    /// <summary>
+    /// DbSet for passengers
+    /// </summary>
     public DbSet<Passenger> Passengers { get; set; }
+
+    /// <summary>
+    /// DbSet for tickets
+    /// </summary>
     public DbSet<Ticket> Tickets { get; set; }
 
+    /// <summary>
+    /// Configure entity mappings and seed initial data
+    /// </summary>
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

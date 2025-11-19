@@ -2,14 +2,16 @@ using Airlines.Application.Services;
 using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Domain.Dataseeder;
-using Airlines.Infrastructure.InMemory.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Airlines.Infrastructure.Db;
 using Airlines.Infrastructure.Db.Repositories;
+using Airlines.ServiceDefaults;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddTransient<Dataseeder>();
+builder.AddServiceDefaults();
+
+builder.Services.AddSingleton<Dataseeder>();
 builder.Services.AddScoped<IRepository<AirplaneFamily>, DbAirplaneFamilyRepository>();
 builder.Services.AddScoped<IRepository<AirplaneModel>, DbAirplaneModelRepository>();
 builder.Services.AddScoped<IRepository<Flight>, DbFlightRepository>();
@@ -38,6 +40,12 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 if (app.Environment.IsDevelopment())
 {

@@ -22,6 +22,7 @@
     <ProjectReference Include="..\Airlines.Domain\Airlines.Domain.csproj" />
     <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" />
     <ProjectReference Include="..\Airlines.Infrastucture.InMemory\Airlines.Infrastructure.InMemory.csproj" />
+    <ProjectReference Include="..\Airlines.ServiceDefaults\Airlines.ServiceDefaults.csproj" />
   </ItemGroup>
 
 </Project>

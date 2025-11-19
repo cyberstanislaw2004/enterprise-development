@@ -4,8 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Airlines.Infrastructure.Db.Repositories;
 
+/// <summary>
+/// Repository for managing Ticket entities in the database
+/// </summary>
 public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
 {
+    /// <summary>
+    /// Create a new Ticket record
+    /// </summary>
     public int Create(Ticket entity)
     {
         dbContext.Tickets.Add(entity);
@@ -13,6 +19,9 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
         return entity.Id;
     }
 
+    /// <summary>
+    /// Return all Ticket records
+    /// </summary>
     public List<Ticket> Read()
     {
         return dbContext.Tickets
@@ -24,6 +33,9 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
             .ToList();
     }
 
+    /// <summary>
+    /// Return Ticket by ID
+    /// </summary>
     public Ticket? Read(int id)
     {
         return dbContext.Tickets
@@ -35,6 +47,9 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
             .FirstOrDefault(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Update Ticket by ID
+    /// </summary>
     public Ticket? Update(int id, Ticket entity)
     {
         var existingEntity = dbContext.Tickets.Find(id);
@@ -53,6 +68,9 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
         return existingEntity;
     }
 
+    /// <summary>
+    /// Delete Ticket by ID
+    /// </summary>
     public bool Delete(int id)
     {
         var existingEntity = dbContext.Tickets.Find(id);

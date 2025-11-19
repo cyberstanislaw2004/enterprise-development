@@ -4,8 +4,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Airlines.Infrastructure.Db.Repositories;
 
+/// <summary>
+/// Repository for managing AirplaneModel entities in the database
+/// </summary>
 public class DbAirplaneModelRepository(AppDbContext dbContext) : IRepository<AirplaneModel>
 {
+    /// <summary>
+    /// Create a new AirplaneModel record
+    /// </summary>
     public int Create(AirplaneModel entity)
     {
         dbContext.AirplaneModels.Add(entity);
@@ -13,11 +19,17 @@ public class DbAirplaneModelRepository(AppDbContext dbContext) : IRepository<Air
         return entity.Id;
     }
 
+    /// <summary>
+    /// Return all AirplaneModel records
+    /// </summary>
     public List<AirplaneModel> Read()
     {
         return dbContext.AirplaneModels.Include(x => x.AirplaneFamily).AsNoTracking().ToList();
     }
 
+    /// <summary>
+    /// Return AirplaneModel by ID
+    /// </summary>
     public AirplaneModel? Read(int id)
     {
         return dbContext.AirplaneModels
@@ -26,6 +38,9 @@ public class DbAirplaneModelRepository(AppDbContext dbContext) : IRepository<Air
             .FirstOrDefault(x => x.Id == id);
     }
 
+    /// <summary>
+    /// Update AirplaneModel by ID
+    /// </summary>
     public AirplaneModel? Update(int id, AirplaneModel entity)
     {
         var existingEntity = dbContext.AirplaneModels.Find(id);
@@ -45,6 +60,9 @@ public class DbAirplaneModelRepository(AppDbContext dbContext) : IRepository<Air
         return existingEntity;
     }
 
+    /// <summary>
+    /// Delete AirplaneModel by ID
+    /// </summary>
     public bool Delete(int id)
     {
         var existingEntity = dbContext.AirplaneModels.Find(id);
