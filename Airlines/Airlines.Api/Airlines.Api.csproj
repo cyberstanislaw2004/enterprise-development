@@ -8,12 +8,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Airlines.Application\Airlines.Application.csproj" />
     <ProjectReference Include="..\Airlines.Domain\Airlines.Domain.csproj" />
+    <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" />
     <ProjectReference Include="..\Airlines.Infrastucture.InMemory\Airlines.Infrastructure.InMemory.csproj" />
   </ItemGroup>
 

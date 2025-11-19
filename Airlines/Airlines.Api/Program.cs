@@ -3,6 +3,8 @@ using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Domain.Dataseeder;
 using Airlines.Infrastructure.InMemory.Repositories;
+using Microsoft.EntityFrameworkCore;
+using Airlines.Infrastructure.Db;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,10 @@ builder.Services.AddScoped<AirplaneModelService>();
 builder.Services.AddScoped<FlightService>();
 builder.Services.AddScoped<PassengerService>();
 builder.Services.AddScoped<TicketService>();
+
+var microsoftConnectionString = builder.Configuration.GetConnectionString("MSSQLConnection")!;
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(microsoftConnectionString));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

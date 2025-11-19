@@ -18,6 +18,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastructure.InM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Api", "Airlines.Api\Airlines.Api.csproj", "{0E7E5911-EAEE-48DB-AACA-4B29F0D764DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastructure.Db", "Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj", "{19D2BC0C-F148-428A-BE2E-D934972E9126}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E} = {E7B6EAC3-4FBF-40C4-BAEE-10615B91E63E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +53,10 @@ Global
 		{0E7E5911-EAEE-48DB-AACA-4B29F0D764DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0E7E5911-EAEE-48DB-AACA-4B29F0D764DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0E7E5911-EAEE-48DB-AACA-4B29F0D764DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19D2BC0C-F148-428A-BE2E-D934972E9126}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19D2BC0C-F148-428A-BE2E-D934972E9126}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19D2BC0C-F148-428A-BE2E-D934972E9126}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19D2BC0C-F148-428A-BE2E-D934972E9126}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
