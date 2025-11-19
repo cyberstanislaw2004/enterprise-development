@@ -84,7 +84,8 @@ public class Dataseeder
             Id = 1,
             ModelName = "A320-200",
             FamilyId = 1,
-            AirplaneFamily = AirplaneFamilies[0],
+            //AirplaneFamily = AirplaneFamilies[0],
+            AirplaneFamily = null,
             RangeOfFlight = 6100,
             PassengerCapacity = 180,
             CargoCapacity = 20
@@ -94,7 +95,8 @@ public class Dataseeder
             Id = 2,
             ModelName = "737-800",
             FamilyId = 2,
-            AirplaneFamily = AirplaneFamilies[1],
+            //AirplaneFamily = AirplaneFamilies[1],
+            AirplaneFamily = null,
             RangeOfFlight = 5436,
             PassengerCapacity = 189,
             CargoCapacity = 18
@@ -104,7 +106,8 @@ public class Dataseeder
             Id = 3,
             ModelName = "SSJ100",
             FamilyId = 3,
-            AirplaneFamily = AirplaneFamilies[2],
+            //AirplaneFamily = AirplaneFamilies[2],
+            AirplaneFamily = null,
             RangeOfFlight = 4500,
             PassengerCapacity = 108,
             CargoCapacity = 12
@@ -114,7 +117,8 @@ public class Dataseeder
             Id = 4,
             ModelName = "MC-21-300",
             FamilyId = 4,
-            AirplaneFamily = AirplaneFamilies[3],
+            //AirplaneFamily = AirplaneFamilies[3],
+            AirplaneFamily = null,
             RangeOfFlight = 6000,
             PassengerCapacity = 211,
             CargoCapacity = 22
@@ -124,7 +128,8 @@ public class Dataseeder
             Id = 5,
             ModelName = "E190",
             FamilyId = 5,
-            AirplaneFamily = AirplaneFamilies[4],
+            //AirplaneFamily = AirplaneFamilies[4],
+            AirplaneFamily = null,
             RangeOfFlight = 4400,
             PassengerCapacity = 100,
             CargoCapacity = 10
@@ -134,7 +139,8 @@ public class Dataseeder
             Id = 6,
             ModelName = "CRJ900",
             FamilyId = 6,
-            AirplaneFamily = AirplaneFamilies[5],
+            //AirplaneFamily = AirplaneFamilies[5],
+            AirplaneFamily = null,
             RangeOfFlight = 2800,
             PassengerCapacity = 90,
             CargoCapacity = 8
@@ -144,7 +150,8 @@ public class Dataseeder
             Id = 7,
             ModelName = "Tu-204-300",
             FamilyId = 7,
-            AirplaneFamily = AirplaneFamilies[6],
+            //AirplaneFamily = AirplaneFamilies[6],
+            AirplaneFamily = null,
             RangeOfFlight = 9000,
             PassengerCapacity = 230,
             CargoCapacity = 25
@@ -154,7 +161,8 @@ public class Dataseeder
             Id = 8,
             ModelName = "Il-96-300",
             FamilyId = 8,
-            AirplaneFamily = AirplaneFamilies[7],
+            //AirplaneFamily = AirplaneFamilies[7],
+            AirplaneFamily = null,
             RangeOfFlight = 11000,
             PassengerCapacity = 262,
             CargoCapacity = 40
@@ -164,7 +172,8 @@ public class Dataseeder
             Id = 9,
             ModelName = "A350-900",
             FamilyId = 9,
-            AirplaneFamily = AirplaneFamilies[8],
+            //AirplaneFamily = AirplaneFamilies[8],
+            AirplaneFamily = null,
             RangeOfFlight = 15000,
             PassengerCapacity = 350,
             CargoCapacity = 45
@@ -174,7 +183,8 @@ public class Dataseeder
             Id = 10,
             ModelName = "B777-300ER",
             FamilyId = 10,
-            AirplaneFamily = AirplaneFamilies[9],
+            //AirplaneFamily = AirplaneFamilies[9],
+            AirplaneFamily = null,
             RangeOfFlight = 13650,
             PassengerCapacity = 396,
             CargoCapacity = 50
@@ -197,7 +207,8 @@ public class Dataseeder
             DepartureTime = new(8, 30),
             Duration = TimeSpan.FromHours(1.2),
             AirplaneModelId = 1,
-            AirplaneModel = AirplaneModels[0]
+            //AirplaneModel = AirplaneModels[0]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -210,7 +221,8 @@ public class Dataseeder
             DepartureTime = new(12, 0),
             Duration = TimeSpan.FromHours(1.2),
             AirplaneModelId = 2,
-            AirplaneModel = AirplaneModels[1]
+            //AirplaneModel = AirplaneModels[1]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -223,7 +235,8 @@ public class Dataseeder
             DepartureTime = new(10, 15),
             Duration = TimeSpan.FromHours(8),
             AirplaneModelId = 10,
-            AirplaneModel = AirplaneModels[9]
+            //AirplaneModel = AirplaneModels[9]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -236,7 +249,8 @@ public class Dataseeder
             DepartureTime = new(14, 45),
             Duration = TimeSpan.FromHours(6.5),
             AirplaneModelId = 9,
-            AirplaneModel = AirplaneModels[8]
+            //AirplaneModel = AirplaneModels[8]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -249,7 +263,8 @@ public class Dataseeder
             DepartureTime = new(21, 0),
             Duration = TimeSpan.FromHours(7.5),
             AirplaneModelId = 8,
-            AirplaneModel = AirplaneModels[7]
+            //AirplaneModel = AirplaneModels[7]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -262,7 +277,8 @@ public class Dataseeder
             DepartureTime = new(7, 10),
             Duration = TimeSpan.FromHours(1),
             AirplaneModelId = 6,
-            AirplaneModel = AirplaneModels[5]
+            //AirplaneModel = AirplaneModels[5]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -275,7 +291,8 @@ public class Dataseeder
             DepartureTime = new(16, 0),
             Duration = TimeSpan.FromHours(8),
             AirplaneModelId = 10,
-            AirplaneModel = AirplaneModels[9]
+            //AirplaneModel = AirplaneModels[9]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -288,7 +305,8 @@ public class Dataseeder
             DepartureTime = new(18, 30),
             Duration = TimeSpan.FromHours(11),
             AirplaneModelId = 9,
-            AirplaneModel = AirplaneModels[8]
+            //AirplaneModel = AirplaneModels[8]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -301,7 +319,8 @@ public class Dataseeder
             DepartureTime = new(13, 20),
             Duration = TimeSpan.FromHours(9),
             AirplaneModelId = 8,
-            AirplaneModel = AirplaneModels[7]
+            //AirplaneModel = AirplaneModels[7]
+            AirplaneModel = null
         },
         new Flight
         {
@@ -314,7 +333,8 @@ public class Dataseeder
             DepartureTime = new(9, 0),
             Duration = TimeSpan.FromHours(1.1),
             AirplaneModelId = 5,
-            AirplaneModel = AirplaneModels[4]
+            //AirplaneModel = AirplaneModels[4]
+            AirplaneModel = null
         }
     ];
 
@@ -404,9 +424,11 @@ public class Dataseeder
         {
             Id = 1,
             FlightId = 1,
-            FlightInfo = Flights[0],
+            //FlightInfo = Flights[0],
+            FlightInfo = null,
             PassengerId = 1,
-            PassengerInfo = Passengers[0],
+            //PassengerInfo = Passengers[0],
+            PassengerInfo = null,
             SeatNumber = "12A",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 0
@@ -415,9 +437,11 @@ public class Dataseeder
         {
             Id = 2,
             FlightId = 1,
-            FlightInfo = Flights[0],
+            //FlightInfo = Flights[0],
+            FlightInfo = null,
             PassengerId = 2,
-            PassengerInfo = Passengers[1],
+            //PassengerInfo = Passengers[1],
+            PassengerInfo = null,
             SeatNumber = "14C",
             HandLuggageAvailability = false,
             TotalBaggageWeight = 20
@@ -426,9 +450,11 @@ public class Dataseeder
         {
             Id = 3,
             FlightId = 1,
-            FlightInfo = Flights[0],
+            //FlightInfo = Flights[0],
+            FlightInfo = null,
             PassengerId = 3,
-            PassengerInfo = Passengers[2],
+            //PassengerInfo = Passengers[2],
+            PassengerInfo = null,
             SeatNumber = "22B",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 0
@@ -437,9 +463,11 @@ public class Dataseeder
         {
             Id = 4,
             FlightId = 3,
-            FlightInfo = Flights[2],
+            //FlightInfo = Flights[2],
+            FlightInfo = null,
             PassengerId = 4,
-            PassengerInfo = Passengers[3],
+            //PassengerInfo = Passengers[3],
+            PassengerInfo = null,
             SeatNumber = "1A",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 8
@@ -448,9 +476,11 @@ public class Dataseeder
         {
             Id = 5,
             FlightId = 5,
-            FlightInfo = Flights[4],
+            //FlightInfo = Flights[4],
+            FlightInfo = null,
             PassengerId = 5,
-            PassengerInfo = Passengers[4],
+            //PassengerInfo = Passengers[4],
+            PassengerInfo = null,
             SeatNumber = "5D",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 25
@@ -459,9 +489,11 @@ public class Dataseeder
         {
             Id = 6,
             FlightId = 6,
-            FlightInfo = Flights[5],
+            //FlightInfo = Flights[5],
+            FlightInfo = null,
             PassengerId = 6,
-            PassengerInfo = Passengers[5],
+            //PassengerInfo = Passengers[5],
+            PassengerInfo = null,
             SeatNumber = "18F",
             HandLuggageAvailability = false,
             TotalBaggageWeight = 30
@@ -470,9 +502,11 @@ public class Dataseeder
         {
             Id = 7,
             FlightId = 6,
-            FlightInfo = Flights[5],
+            //FlightInfo = Flights[5],
+            FlightInfo = null,
             PassengerId = 7,
-            PassengerInfo = Passengers[6],
+            //PassengerInfo = Passengers[6],
+            PassengerInfo = null,
             SeatNumber = "8C",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 12
@@ -481,9 +515,11 @@ public class Dataseeder
         {
             Id = 8,
             FlightId = 8,
-            FlightInfo = Flights[7],
+            //FlightInfo = Flights[7],
+            FlightInfo = null,
             PassengerId = 8,
-            PassengerInfo = Passengers[7],
+            //PassengerInfo = Passengers[7],
+            PassengerInfo = null,
             SeatNumber = "9B",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 18
@@ -492,9 +528,11 @@ public class Dataseeder
         {
             Id = 9,
             FlightId = 9,
-            FlightInfo = Flights[8],
+            //FlightInfo = Flights[8],
+            FlightInfo = null,
             PassengerId = 9,
-            PassengerInfo = Passengers[8],
+            //PassengerInfo = Passengers[8],
+            PassengerInfo = null,
             SeatNumber = "2E",
             HandLuggageAvailability = true,
             TotalBaggageWeight = 28
@@ -503,9 +541,11 @@ public class Dataseeder
         {
             Id = 10,
             FlightId = 10,
-            FlightInfo = Flights[9],
+            //FlightInfo = Flights[9],
+            FlightInfo = null,
             PassengerId = 10,
-            PassengerInfo = Passengers[9],
+            //PassengerInfo = Passengers[9],
+            PassengerInfo = null,
             SeatNumber = "3A",
             HandLuggageAvailability = false,
             TotalBaggageWeight = 22

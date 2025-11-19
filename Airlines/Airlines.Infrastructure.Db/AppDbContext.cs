@@ -42,7 +42,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .HasForeignKey("FamilyId")
                 .IsRequired();
 
-            entity.Ignore(x => x.AirplaneFamily);
             entity.HasData(seeder.AirplaneModels);
         });
 
@@ -63,7 +62,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .HasForeignKey("AirplaneModelId")
                 .IsRequired();
 
-            entity.Ignore(x => x.AirplaneModel);
             entity.HasData(seeder.Flights);
         });
 
@@ -96,8 +94,6 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .HasForeignKey("PassengerId")
                 .IsRequired();
 
-            entity.Ignore(x => x.FlightInfo);
-            entity.Ignore(x => x.PassengerInfo);
             entity.HasData(seeder.Tickets);
         });
     }

@@ -5,15 +5,16 @@ using Airlines.Domain.Dataseeder;
 using Airlines.Infrastructure.InMemory.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Airlines.Infrastructure.Db;
+using Airlines.Infrastructure.Db.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<Dataseeder>();
-builder.Services.AddSingleton<IRepository<AirplaneFamily>, InMemoryAirplaneFamilyRepository>();
-builder.Services.AddSingleton<IRepository<AirplaneModel>, InMemoryAirplaneModelRepository>();
-builder.Services.AddSingleton<IRepository<Flight>, InMemoryFlightRepository>();
-builder.Services.AddSingleton<IRepository<Passenger>, InMemoryPassengerRepository>();
-builder.Services.AddSingleton<IRepository<Ticket>, InMemoryTicketRepository>();
+builder.Services.AddTransient<Dataseeder>();
+builder.Services.AddScoped<IRepository<AirplaneFamily>, DbAirplaneFamilyRepository>();
+builder.Services.AddScoped<IRepository<AirplaneModel>, DbAirplaneModelRepository>();
+builder.Services.AddScoped<IRepository<Flight>, DbFlightRepository>();
+builder.Services.AddScoped<IRepository<Passenger>, DbPassengerRepository>();
+builder.Services.AddScoped<IRepository<Ticket>, DbTicketRepository>();
 
 builder.Services.AddScoped<AirplaneFamilyService>();
 builder.Services.AddScoped<AirplaneModelService>();
