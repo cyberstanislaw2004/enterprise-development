@@ -83,6 +83,7 @@ public class Dataseeder
         {
             Id = 1,
             ModelName = "A320-200",
+            FamilyId = 1,
             AirplaneFamily = AirplaneFamilies[0],
             RangeOfFlight = 6100,
             PassengerCapacity = 180,
@@ -92,6 +93,7 @@ public class Dataseeder
         {
             Id = 2,
             ModelName = "737-800",
+            FamilyId = 2,
             AirplaneFamily = AirplaneFamilies[1],
             RangeOfFlight = 5436,
             PassengerCapacity = 189,
@@ -101,6 +103,7 @@ public class Dataseeder
         {
             Id = 3,
             ModelName = "SSJ100",
+            FamilyId = 3,
             AirplaneFamily = AirplaneFamilies[2],
             RangeOfFlight = 4500,
             PassengerCapacity = 108,
@@ -110,6 +113,7 @@ public class Dataseeder
         {
             Id = 4,
             ModelName = "MC-21-300",
+            FamilyId = 4,
             AirplaneFamily = AirplaneFamilies[3],
             RangeOfFlight = 6000,
             PassengerCapacity = 211,
@@ -119,6 +123,7 @@ public class Dataseeder
         {
             Id = 5,
             ModelName = "E190",
+            FamilyId = 5,
             AirplaneFamily = AirplaneFamilies[4],
             RangeOfFlight = 4400,
             PassengerCapacity = 100,
@@ -128,6 +133,7 @@ public class Dataseeder
         {
             Id = 6,
             ModelName = "CRJ900",
+            FamilyId = 6,
             AirplaneFamily = AirplaneFamilies[5],
             RangeOfFlight = 2800,
             PassengerCapacity = 90,
@@ -137,6 +143,7 @@ public class Dataseeder
         {
             Id = 7,
             ModelName = "Tu-204-300",
+            FamilyId = 7,
             AirplaneFamily = AirplaneFamilies[6],
             RangeOfFlight = 9000,
             PassengerCapacity = 230,
@@ -146,6 +153,7 @@ public class Dataseeder
         {
             Id = 8,
             ModelName = "Il-96-300",
+            FamilyId = 8,
             AirplaneFamily = AirplaneFamilies[7],
             RangeOfFlight = 11000,
             PassengerCapacity = 262,
@@ -155,6 +163,7 @@ public class Dataseeder
         {
             Id = 9,
             ModelName = "A350-900",
+            FamilyId = 9,
             AirplaneFamily = AirplaneFamilies[8],
             RangeOfFlight = 15000,
             PassengerCapacity = 350,
@@ -164,6 +173,7 @@ public class Dataseeder
         {
             Id = 10,
             ModelName = "B777-300ER",
+            FamilyId = 10,
             AirplaneFamily = AirplaneFamilies[9],
             RangeOfFlight = 13650,
             PassengerCapacity = 396,
@@ -186,6 +196,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 10, 1),
             DepartureTime = new(8, 30),
             Duration = TimeSpan.FromHours(1.2),
+            AirplaneModelId = 1,
             AirplaneModel = AirplaneModels[0]
         },
         new Flight
@@ -198,6 +209,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 10, 2),
             DepartureTime = new(12, 0),
             Duration = TimeSpan.FromHours(1.2),
+            AirplaneModelId = 2,
             AirplaneModel = AirplaneModels[1]
         },
         new Flight
@@ -210,6 +222,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 11, 1),
             DepartureTime = new(10, 15),
             Duration = TimeSpan.FromHours(8),
+            AirplaneModelId = 10,
             AirplaneModel = AirplaneModels[9]
         },
         new Flight
@@ -222,6 +235,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 12, 1),
             DepartureTime = new(14, 45),
             Duration = TimeSpan.FromHours(6.5),
+            AirplaneModelId = 9,
             AirplaneModel = AirplaneModels[8]
         },
         new Flight
@@ -234,6 +248,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 12, 5),
             DepartureTime = new(21, 0),
             Duration = TimeSpan.FromHours(7.5),
+            AirplaneModelId = 8,
             AirplaneModel = AirplaneModels[7]
         },
         new Flight
@@ -246,6 +261,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 9, 20),
             DepartureTime = new(7, 10),
             Duration = TimeSpan.FromHours(1),
+            AirplaneModelId = 6,
             AirplaneModel = AirplaneModels[5]
         },
         new Flight
@@ -258,6 +274,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 9, 25),
             DepartureTime = new(16, 0),
             Duration = TimeSpan.FromHours(8),
+            AirplaneModelId = 10,
             AirplaneModel = AirplaneModels[9]
         },
         new Flight
@@ -270,6 +287,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 11, 16),
             DepartureTime = new(18, 30),
             Duration = TimeSpan.FromHours(11),
+            AirplaneModelId = 9,
             AirplaneModel = AirplaneModels[8]
         },
         new Flight
@@ -282,6 +300,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 10, 10),
             DepartureTime = new(13, 20),
             Duration = TimeSpan.FromHours(9),
+            AirplaneModelId = 8,
             AirplaneModel = AirplaneModels[7]
         },
         new Flight
@@ -294,6 +313,7 @@ public class Dataseeder
             ArrivalDate = new(2025, 12, 31),
             DepartureTime = new(9, 0),
             Duration = TimeSpan.FromHours(1.1),
+            AirplaneModelId = 5,
             AirplaneModel = AirplaneModels[4]
         }
     ];
@@ -383,7 +403,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 1,
+            FlightId = 1,
             FlightInfo = Flights[0],
+            PassengerId = 1,
             PassengerInfo = Passengers[0],
             SeatNumber = "12A",
             HandLuggageAvailability = true,
@@ -392,7 +414,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 2,
+            FlightId = 1,
             FlightInfo = Flights[0],
+            PassengerId = 2,
             PassengerInfo = Passengers[1],
             SeatNumber = "14C",
             HandLuggageAvailability = false,
@@ -401,7 +425,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 3,
+            FlightId = 1,
             FlightInfo = Flights[0],
+            PassengerId = 3,
             PassengerInfo = Passengers[2],
             SeatNumber = "22B",
             HandLuggageAvailability = true,
@@ -410,7 +436,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 4,
+            FlightId = 3,
             FlightInfo = Flights[2],
+            PassengerId = 4,
             PassengerInfo = Passengers[3],
             SeatNumber = "1A",
             HandLuggageAvailability = true,
@@ -419,7 +447,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 5,
+            FlightId = 5,
             FlightInfo = Flights[4],
+            PassengerId = 5,
             PassengerInfo = Passengers[4],
             SeatNumber = "5D",
             HandLuggageAvailability = true,
@@ -428,7 +458,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 6,
+            FlightId = 6,
             FlightInfo = Flights[5],
+            PassengerId = 6,
             PassengerInfo = Passengers[5],
             SeatNumber = "18F",
             HandLuggageAvailability = false,
@@ -437,7 +469,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 7,
+            FlightId = 6,
             FlightInfo = Flights[5],
+            PassengerId = 7,
             PassengerInfo = Passengers[6],
             SeatNumber = "8C",
             HandLuggageAvailability = true,
@@ -446,7 +480,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 8,
+            FlightId = 8,
             FlightInfo = Flights[7],
+            PassengerId = 8,
             PassengerInfo = Passengers[7],
             SeatNumber = "9B",
             HandLuggageAvailability = true,
@@ -455,7 +491,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 9,
+            FlightId = 9,
             FlightInfo = Flights[8],
+            PassengerId = 9,
             PassengerInfo = Passengers[8],
             SeatNumber = "2E",
             HandLuggageAvailability = true,
@@ -464,7 +502,9 @@ public class Dataseeder
         new Ticket
         {
             Id = 10,
+            FlightId = 10,
             FlightInfo = Flights[9],
+            PassengerId = 10,
             PassengerInfo = Passengers[9],
             SeatNumber = "3A",
             HandLuggageAvailability = false,

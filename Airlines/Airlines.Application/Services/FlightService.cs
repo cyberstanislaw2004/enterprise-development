@@ -24,6 +24,7 @@ public class FlightService(IRepository<Flight> repository)
             ArrivalDate = entity.ArrivalDate,
             DepartureTime = entity.DepartureTime,
             Duration = entity.Duration,
+            AirplaneModelId = model.Id,
             AirplaneModel = model
         };
     }

@@ -17,7 +17,9 @@ public class TicketService(IRepository<Ticket> repository)
         return new Ticket
         {
             Id = 0,
+            FlightId = flight.Id,
             FlightInfo = flight,
+            PassengerId = passenger.Id,
             PassengerInfo = passenger,
             SeatNumber = entity.SeatNumber,
             HandLuggageAvailability = entity.HandLuggageAvailability,

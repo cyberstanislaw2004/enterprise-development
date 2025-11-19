@@ -16,6 +16,11 @@ public class AirplaneModel
     public required string ModelName { get; set; }
 
     /// <summary>
+    /// Foreign key to the model family
+    /// </summary>
+    public required int FamilyId { get; set; }
+
+    /// <summary>
     /// Model family
     /// </summary>
     public required AirplaneFamily AirplaneFamily { get; set; }

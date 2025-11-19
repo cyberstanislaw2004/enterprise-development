@@ -46,6 +46,11 @@ public class Flight
     public TimeSpan? Duration { get; set; }
 
     /// <summary>
+    /// Foreign key to the airplane model
+    /// </summary>
+    public required int AirplaneModelId { get; set; }
+
+    /// <summary>
     /// Airplane model
     /// </summary>
     public required AirplaneModel AirplaneModel { get; set; }

@@ -11,9 +11,19 @@ public class Ticket
     public required int Id { get; set; }
 
     /// <summary>
+    /// Foreign key to the flight
+    /// </summary>
+    public required int FlightId { get; set; }
+
+    /// <summary>
     /// Flight information
     /// </summary>
     public required Flight FlightInfo { get; set; }
+
+    /// <summary>
+    /// Foreign key to the passenger
+    /// </summary>
+    public required int PassengerId { get; set; }
 
     /// <summary>
     /// Passenger information

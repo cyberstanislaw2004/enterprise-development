@@ -1,4 +1,5 @@
 ﻿using Airlines.Domain;
+using Airlines.Domain.Dataseeder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -16,11 +17,15 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
     {
         base.OnModelCreating(modelBuilder);
 
+        var seeder = new Dataseeder();
+
         modelBuilder.Entity<AirplaneFamily>(entity =>
         {
             entity.HasKey(x => x.Id);
             entity.Property(x => x.Name).IsRequired();
             entity.Property(x => x.Manufacturer).IsRequired();
+
+            entity.HasData(seeder.AirplaneFamilies);
         });
 
         modelBuilder.Entity<AirplaneModel>(entity =>
@@ -36,6 +41,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .WithMany()
                 .HasForeignKey("FamilyId")
                 .IsRequired();
+
+            entity.Ignore(x => x.AirplaneFamily);
+            entity.HasData(seeder.AirplaneModels);
         });
 
         modelBuilder.Entity<Flight>(entity =>
@@ -54,6 +62,9 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .WithMany()
                 .HasForeignKey("AirplaneModelId")
                 .IsRequired();
+
+            entity.Ignore(x => x.AirplaneModel);
+            entity.HasData(seeder.Flights);
         });
 
         modelBuilder.Entity<Passenger>(entity =>
@@ -62,6 +73,8 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
             entity.Property(x => x.NumberOfPassport).IsRequired();
             entity.Property(x => x.FullName).IsRequired();
             entity.Property(x => x.BirthDate);
+
+            entity.HasData(seeder.Passengers);
         });
 
         modelBuilder.Entity<Ticket>(entity =>
@@ -82,6 +95,10 @@ public class AppDbContext(DbContextOptions options) : DbContext(options)
                 .WithMany()
                 .HasForeignKey("PassengerId")
                 .IsRequired();
+
+            entity.Ignore(x => x.FlightInfo);
+            entity.Ignore(x => x.PassengerInfo);
+            entity.HasData(seeder.Tickets);
         });
     }
 }

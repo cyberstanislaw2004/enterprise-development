@@ -18,6 +18,7 @@ public class AirplaneModelService(IRepository<AirplaneModel> repository)
         {
             Id = 0,
             ModelName = entity.ModelName,
+            FamilyId = family.Id,
             AirplaneFamily = family,
             RangeOfFlight = entity.RangeOfFlight,
             PassengerCapacity = entity.PassengerCapacity,
