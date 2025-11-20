@@ -18,7 +18,7 @@ public class Ticket
     /// <summary>
     /// Flight information
     /// </summary>
-    public required Flight? FlightInfo { get; set; }
+    public virtual Flight? FlightInfo { get; set; }
 
     /// <summary>
     /// Foreign key to the passenger
@@ -28,7 +28,7 @@ public class Ticket
     /// <summary>
     /// Passenger information
     /// </summary>
-    public required Passenger? PassengerInfo { get; set; }
+    public virtual Passenger? PassengerInfo { get; set; }
 
     /// <summary>
     /// Seat number

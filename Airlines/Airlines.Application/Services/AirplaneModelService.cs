@@ -1,13 +1,13 @@
-﻿using Airlines.Dto;
-using Airlines.Domain;
+﻿using Airlines.Domain;
 using Airlines.Domain.Repositories;
+using Airlines.Dto;
 
 namespace Airlines.Application.Services;
 
 /// <summary>
 /// Service for managing airplane models entities
 /// </summary>
-public class AirplaneModelService(IRepository<AirplaneModel> repository)
+public class AirplaneModelService(IRepository<AirplaneModel> _modelRepository, IRepository<AirplaneFamily> _familyRepository)
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -19,7 +19,7 @@ public class AirplaneModelService(IRepository<AirplaneModel> repository)
             Id = 0,
             ModelName = entity.ModelName,
             FamilyId = family.Id,
-            AirplaneFamily = family,
+            AirplaneFamily = null,
             RangeOfFlight = entity.RangeOfFlight,
             PassengerCapacity = entity.PassengerCapacity,
             CargoCapacity = entity.CargoCapacity
@@ -33,7 +33,7 @@ public class AirplaneModelService(IRepository<AirplaneModel> repository)
         new(
             entity.Id,
             entity.ModelName,
-            new AirplaneFamilyReadDto(entity.AirplaneFamily.Id, entity.AirplaneFamily.Name, entity.AirplaneFamily.Manufacturer),
+            new AirplaneFamilyReadDto(entity.AirplaneFamily!.Id, entity.AirplaneFamily.Name, entity.AirplaneFamily.Manufacturer),
             entity.RangeOfFlight,
             entity.PassengerCapacity,
             entity.CargoCapacity
@@ -42,21 +42,31 @@ public class AirplaneModelService(IRepository<AirplaneModel> repository)
     /// <summary>
     /// Create a new airplane model record
     /// </summary>
-    public int CreateAirplaneModel(AirplaneModelCreateDto entity, AirplaneFamily family) =>
-        repository.Create(MapDto(entity, family));
+    public int CreateAirplaneModel(AirplaneModelCreateDto entity)
+    {
+        if (!entity.FamilyId.HasValue)
+            throw new ArgumentException("FamilyId is required");
+
+        var family = _familyRepository.Read(entity.FamilyId.Value);
+        if (family == null)
+            throw new ArgumentException("Invalid AirplaneFamily ID");
+
+        var model = MapDto(entity, family);
+        return _modelRepository.Create(model);
+    }
 
     /// <summary>
     /// Get all airplane models
     /// </summary>
     public List<AirplaneModelReadDto> GetAirplaneModels() =>
-        repository.Read().Select(MapReadDto).ToList();
+        _modelRepository.Read().Select(MapReadDto).ToList();
 
     /// <summary>
     /// Get airplane model by ID
     /// </summary>
     public AirplaneModelReadDto? GetAirplaneModel(int id)
     {
-        var entity = repository.Read(id);
+        var entity = _modelRepository.Read(id);
 
         if (entity == null)
             return null;
@@ -67,12 +77,22 @@ public class AirplaneModelService(IRepository<AirplaneModel> repository)
     /// <summary>
     /// Update airplane model by ID
     /// </summary>
-    public AirplaneModel? UpdateAirplaneModel(int id, AirplaneModelCreateDto entity, AirplaneFamily family) =>
-        repository.Update(id, MapDto(entity, family));
+    public AirplaneModel? UpdateAirplaneModel(int id, AirplaneModelCreateDto dto)
+    {
+        if (!dto.FamilyId.HasValue)
+            throw new ArgumentException("FamilyId is required");
+
+        var family = _familyRepository.Read(dto.FamilyId.Value);
+        if (family == null)
+            throw new ArgumentException("Invalid AirplaneFamily ID");
+
+        var entity = MapDto(dto, family);
+        return _modelRepository.Update(id, entity);
+    }
 
     /// <summary>
     /// Delete airplane model by ID
     /// </summary>
     public bool DeleteAirplaneModel(int id) =>
-        repository.Delete(id);
+        _modelRepository.Delete(id);
 }

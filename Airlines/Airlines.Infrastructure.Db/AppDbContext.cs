@@ -1,7 +1,6 @@
 ﻿using Airlines.Domain;
 using Airlines.Domain.Dataseeder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Airlines.Infrastructure.Db;
 

@@ -17,7 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Airlines.Api\Airlines.Api.csproj" />
-    <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" />
+    <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 
 </Project>

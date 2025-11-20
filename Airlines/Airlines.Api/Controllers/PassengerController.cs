@@ -1,5 +1,5 @@
-﻿using Airlines.Dto;
-using Airlines.Application.Services;
+﻿using Airlines.Application.Services;
+using Airlines.Dto;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airlines.Api.Controllers;
@@ -9,28 +9,23 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class PassengerController : ControllerBase
+public class PassengerController(PassengerService _service, TicketService _ticketService) : ControllerBase
 {
-    private readonly PassengerService _service;
-
-    /// <summary>
-    /// Initializes the controller
-    /// </summary>
-    public PassengerController(PassengerService service) =>
-        _service = service;
-
     /// <summary>
     /// Returns a list of all passengers
     /// </summary>
     [HttpGet]
-    public IActionResult GetAll() =>
+    [ProducesResponseType(200)]
+    public ActionResult GetAll() =>
         Ok(_service.GetPassengers());
 
     /// <summary>
     /// Returns information about passenger by id
     /// </summary>
     [HttpGet("{id}")]
-    public IActionResult Get(int id)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult Get(int id)
     {
         var entity = _service.GetPassenger(id);
         if (entity == null)
@@ -39,10 +34,30 @@ public class PassengerController : ControllerBase
     }
 
     /// <summary>
+    /// Returns all tickets for this passenger
+    /// </summary>
+    [HttpGet("{id}/tickets")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult GetTickets(int id)
+    {
+        var passenger = _service.GetPassenger(id);
+        if (passenger == null) return NotFound();
+
+        var tickets = _ticketService
+            .GetTickets()
+            .Where(t => t.PassengerInfo.Id == id)
+            .ToList();
+
+        return Ok(tickets);
+    }
+
+    /// <summary>
     /// Create a new passenger
     /// </summary>
     [HttpPost]
-    public IActionResult Create([FromBody] PassengerCreateDto dto)
+    [ProducesResponseType(201)]
+    public ActionResult Create([FromBody] PassengerCreateDto dto)
     {
         var id = _service.CreatePassenger(dto);
         return CreatedAtAction(nameof(Get), new { id }, dto);
@@ -52,7 +67,9 @@ public class PassengerController : ControllerBase
     /// Update passenger by ID
     /// </summary>
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] PassengerCreateDto dto)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult Update(int id, [FromBody] PassengerCreateDto dto)
     {
         var updated = _service.UpdatePassenger(id, dto);
         if (updated == null)
@@ -64,7 +81,8 @@ public class PassengerController : ControllerBase
     /// Delete passenger by ID
     /// </summary>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    [ProducesResponseType(204)]
+    public ActionResult Delete(int id)
     {
         _service.DeletePassenger(id);
         return NoContent();

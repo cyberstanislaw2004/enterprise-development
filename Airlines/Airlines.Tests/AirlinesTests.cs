@@ -1,12 +1,11 @@
-﻿using Airlines.Domain;
-using Airlines.Domain.Dataseeder;
+﻿using Airlines.Domain.Dataseeder;
 
 namespace Airlines.Tests;
 
 /// <summary>
 /// Unit Tests for Airlines domain
 /// </summary>
-public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
+public class AirlinesTests(TestDataseeder fixture) : IClassFixture<TestDataseeder>
 {
     /// <summary>
     /// Display the top 5 flights by the number of passengers carried.
@@ -18,8 +17,8 @@ public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
             from flight in fixture.Flights
             let passengerCount =
                 (from ticket in fixture.Tickets
-                where ticket.FlightInfo == flight
-                select ticket).Count()
+                 where ticket.FlightInfo == flight
+                 select ticket).Count()
             orderby passengerCount descending
             select new
             {
@@ -68,17 +67,17 @@ public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
         var infoAboutPassenger = (
             from ticket in fixture.Tickets
             where ticket.TotalBaggageWeight == 0
-                && ticket.FlightInfo.FlightNumber == selectedFlight.FlightNumber
-            orderby ticket.PassengerInfo.FullName
+                && ticket.FlightInfo!.FlightNumber == selectedFlight.FlightNumber
+            orderby ticket.PassengerInfo!.FullName
             select ticket.PassengerInfo)
             .ToList();
 
         Assert.NotEmpty(infoAboutPassenger);
-        
+
         foreach (var passenger in infoAboutPassenger)
         {
-            Assert.Equal(selectedFlight.FlightNumber, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).FlightInfo.FlightNumber);
-            Assert.Equal(0, fixture.Tickets.First(t => t.PassengerInfo.Id == passenger.Id).TotalBaggageWeight);
+            Assert.Equal(selectedFlight.FlightNumber, fixture.Tickets.First(t => t.PassengerInfo!.Id == passenger.Id).FlightInfo!.FlightNumber);
+            Assert.Equal(0, fixture.Tickets.First(t => t.PassengerInfo!.Id == passenger.Id).TotalBaggageWeight);
         }
 
         for (var i = 0; i < infoAboutPassenger.Count() - 1; i++) Assert.True(string.Compare(infoAboutPassenger[i].FullName, infoAboutPassenger[i + 1].FullName) <= 0);
@@ -97,7 +96,7 @@ public class AirlinesTests(Dataseeder fixture): IClassFixture<Dataseeder>
 
         var allFlights = (
             from flight in fixture.Flights
-            where flight.AirplaneModel.ModelName == selectedModel
+            where flight.AirplaneModel!.ModelName == selectedModel
                 && flight.DepartureDate >= startDate
                 && flight.ArrivalDate <= endDate
             select flight.FlightNumber)

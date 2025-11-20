@@ -1,11 +1,11 @@
 using Airlines.Application.Services;
 using Airlines.Domain;
-using Airlines.Domain.Repositories;
 using Airlines.Domain.Dataseeder;
-using Microsoft.EntityFrameworkCore;
+using Airlines.Domain.Repositories;
 using Airlines.Infrastructure.Db;
 using Airlines.Infrastructure.Db.Repositories;
 using Airlines.ServiceDefaults;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +18,7 @@ builder.Services.AddScoped<IRepository<Flight>, DbFlightRepository>();
 builder.Services.AddScoped<IRepository<Passenger>, DbPassengerRepository>();
 builder.Services.AddScoped<IRepository<Ticket>, DbTicketRepository>();
 
-builder.Services.AddScoped<AirplaneFamilyService>();
-builder.Services.AddScoped<AirplaneModelService>();
-builder.Services.AddScoped<FlightService>();
-builder.Services.AddScoped<PassengerService>();
-builder.Services.AddScoped<TicketService>();
+builder.Services.AddApplicationServices();
 
 var microsoftConnectionString = builder.Configuration.GetConnectionString("MSSQLConnection")!;
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -37,6 +33,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(Path.Combine(basePath, "Airlines.Domain.xml"));
     options.IncludeXmlComments(Path.Combine(basePath, "Airlines.Api.xml"));
     options.IncludeXmlComments(Path.Combine(basePath, "Airlines.Application.xml"));
+    options.IncludeXmlComments(Path.Combine(basePath, "Airlines.Dto.xml"));
 });
 
 var app = builder.Build();

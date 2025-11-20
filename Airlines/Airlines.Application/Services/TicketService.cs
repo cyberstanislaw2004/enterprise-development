@@ -1,13 +1,13 @@
-﻿using Airlines.Dto;
-using Airlines.Domain;
+﻿using Airlines.Domain;
 using Airlines.Domain.Repositories;
+using Airlines.Dto;
 
 namespace Airlines.Application.Services;
 
 /// <summary>
 /// Service for managing passengers entities
 /// </summary>
-public class TicketService(IRepository<Ticket> repository)
+public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Flight> _flightRepository, IRepository<Passenger> _passengerRepository)
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -34,7 +34,7 @@ public class TicketService(IRepository<Ticket> repository)
         new(
             entity.Id,
             new FlightReadDto(
-                entity.FlightInfo.Id,
+                entity.FlightInfo!.Id,
                 entity.FlightInfo.FlightNumber,
                 entity.FlightInfo.DepartureAirportCode,
                 entity.FlightInfo.DestinationAirportCode,
@@ -43,10 +43,10 @@ public class TicketService(IRepository<Ticket> repository)
                 entity.FlightInfo.DepartureTime,
                 entity.FlightInfo.Duration,
                 new AirplaneModelReadDto(
-                    entity.FlightInfo.AirplaneModel.Id,
+                    entity.FlightInfo.AirplaneModel!.Id,
                     entity.FlightInfo.AirplaneModel.ModelName,
                     new AirplaneFamilyReadDto(
-                        entity.FlightInfo.AirplaneModel.AirplaneFamily.Id,
+                        entity.FlightInfo.AirplaneModel.AirplaneFamily!.Id,
                         entity.FlightInfo.AirplaneModel.AirplaneFamily.Name,
                         entity.FlightInfo.AirplaneModel.AirplaneFamily.Manufacturer
                     ),
@@ -56,7 +56,7 @@ public class TicketService(IRepository<Ticket> repository)
                 )
             ),
             new PassengerReadDto(
-                entity.PassengerInfo.Id,
+                entity.PassengerInfo!.Id,
                 entity.PassengerInfo.NumberOfPassport,
                 entity.PassengerInfo.FullName,
                 entity.PassengerInfo.BirthDate
@@ -69,21 +69,41 @@ public class TicketService(IRepository<Ticket> repository)
     /// <summary>
     /// Create a new ticket record
     /// </summary>
-    public int CreateTicket(TicketCreateDto entity, Flight flight, Passenger passenger) =>
-        repository.Create(MapDto(entity, flight, passenger));
+    public int CreateTicket(TicketCreateDto dto)
+    {
+        var flight = _flightRepository.Read(dto.FlightId);
+        if (flight == null) throw new ArgumentException("Invalid Flight ID");
+
+        var passenger = _passengerRepository.Read(dto.PassengerId);
+        if (passenger == null) throw new ArgumentException("Invalid Passenger ID");
+
+        var entity = new Ticket
+        {
+            Id = 0,
+            FlightId = flight.Id,
+            FlightInfo = null,
+            PassengerId = passenger.Id,
+            PassengerInfo = null,
+            SeatNumber = dto.SeatNumber,
+            HandLuggageAvailability = dto.HandLuggageAvailability,
+            TotalBaggageWeight = dto.TotalBaggageWeight
+        };
+
+        return _ticketRepository.Create(entity);
+    }
 
     /// <summary>
     /// Get all tickets
     /// </summary>
     public List<TicketReadDto> GetTickets() =>
-        repository.Read().Select(MapReadDto).ToList();
+        _ticketRepository.Read().Select(MapReadDto).ToList();
 
     /// <summary>
     /// Get ticket by ID
     /// </summary>
     public TicketReadDto? GetTicket(int id)
     {
-        var entity = repository.Read(id);
+        var entity = _ticketRepository.Read(id);
 
         if (entity == null)
             return null;
@@ -94,12 +114,32 @@ public class TicketService(IRepository<Ticket> repository)
     /// <summary>
     /// Update ticket by ID
     /// </summary>
-    public Ticket? UpdateTicket(int id, TicketCreateDto entity, Flight flight, Passenger passenger) =>
-        repository.Update(id, MapDto(entity, flight, passenger));
+    public Ticket? UpdateTicket(int id, TicketCreateDto dto)
+    {
+        var flight = _flightRepository.Read(dto.FlightId);
+        if (flight == null) throw new ArgumentException("Invalid Flight ID");
+
+        var passenger = _passengerRepository.Read(dto.PassengerId);
+        if (passenger == null) throw new ArgumentException("Invalid Passenger ID");
+
+        var entity = new Ticket
+        {
+            Id = 0,
+            FlightId = flight.Id,
+            FlightInfo = null,
+            PassengerId = passenger.Id,
+            PassengerInfo = null,
+            SeatNumber = dto.SeatNumber,
+            HandLuggageAvailability = dto.HandLuggageAvailability,
+            TotalBaggageWeight = dto.TotalBaggageWeight
+        };
+
+        return _ticketRepository.Update(id, entity);
+    }
 
     /// <summary>
     /// Delete ticket by ID
     /// </summary>
     public bool DeleteTicket(int id) =>
-        repository.Delete(id);
+        _ticketRepository.Delete(id);
 }

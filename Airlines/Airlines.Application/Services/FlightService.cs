@@ -1,13 +1,13 @@
-﻿using Airlines.Dto;
-using Airlines.Domain;
+﻿using Airlines.Domain;
 using Airlines.Domain.Repositories;
+using Airlines.Dto;
 
 namespace Airlines.Application.Services;
 
 /// <summary>
 /// Service for managing flights entities
 /// </summary>
-public class FlightService(IRepository<Flight> repository)
+public class FlightService(IRepository<Flight> _flightRepository, IRepository<AirplaneModel> _modelRepository)
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -43,10 +43,10 @@ public class FlightService(IRepository<Flight> repository)
         entity.DepartureTime,
         entity.Duration,
         new AirplaneModelReadDto(
-            entity.AirplaneModel.Id,
+            entity.AirplaneModel!.Id,
             entity.AirplaneModel.ModelName,
             new AirplaneFamilyReadDto(
-                entity.AirplaneModel.AirplaneFamily.Id,
+                entity.AirplaneModel.AirplaneFamily!.Id,
                 entity.AirplaneModel.AirplaneFamily.Name,
                 entity.AirplaneModel.AirplaneFamily.Manufacturer
             ),
@@ -59,21 +59,41 @@ public class FlightService(IRepository<Flight> repository)
     /// <summary>
     /// Create a new flight record
     /// </summary>
-    public int CreateFlight(FlightCreateDto entity, AirplaneModel model) =>
-        repository.Create(MapDto(entity, model));
+    public int CreateFlight(FlightCreateDto dto)
+    {
+        var model = _modelRepository.Read(dto.AirplaneModelId);
+        if (model == null)
+            throw new ArgumentException("Invalid AirplaneModel ID");
+
+        var entity = new Flight
+        {
+            Id = 0,
+            FlightNumber = dto.FlightNumber,
+            DepartureAirportCode = dto.DepartureAirportCode,
+            DestinationAirportCode = dto.DestinationAirportCode,
+            DepartureDate = dto.DepartureDate,
+            ArrivalDate = dto.ArrivalDate,
+            DepartureTime = dto.DepartureTime,
+            Duration = dto.Duration,
+            AirplaneModelId = model.Id,
+            AirplaneModel = null // не присваиваем объект модели напрямую
+        };
+
+        return _flightRepository.Create(entity);
+    }
 
     /// <summary>
     /// Get all flights
     /// </summary>
     public List<FlightReadDto> GetFlights() =>
-        repository.Read().Select(MapReadDto).ToList();
+        _flightRepository.Read().Select(MapReadDto).ToList();
 
     /// <summary>
     /// Get flight by ID
     /// </summary>
     public FlightReadDto? GetFlight(int id)
     {
-        var entity = repository.Read(id);
+        var entity = _flightRepository.Read(id);
 
         if (entity == null)
             return null;
@@ -84,12 +104,34 @@ public class FlightService(IRepository<Flight> repository)
     /// <summary>
     /// Update flight by ID
     /// </summary>
-    public Flight? UpdateFlight(int id, FlightCreateDto entity, AirplaneModel model) =>
-        repository.Update(id, MapDto(entity, model));
+    public Flight? UpdateFlight(int id, FlightCreateDto dto)
+    {
+        {
+            var model = _modelRepository.Read(dto.AirplaneModelId);
+            if (model == null)
+                throw new ArgumentException("Invalid AirplaneModel ID");
+
+            var entity = new Flight
+            {
+                Id = 0,
+                FlightNumber = dto.FlightNumber,
+                DepartureAirportCode = dto.DepartureAirportCode,
+                DestinationAirportCode = dto.DestinationAirportCode,
+                DepartureDate = dto.DepartureDate,
+                ArrivalDate = dto.ArrivalDate,
+                DepartureTime = dto.DepartureTime,
+                Duration = dto.Duration,
+                AirplaneModelId = model.Id,
+                AirplaneModel = null
+            };
+
+            return _flightRepository.Update(id, entity);
+        }
+    }
 
     /// <summary>
     /// Delete flight by ID
     /// </summary>
     public bool DeleteFlight(int id) =>
-        repository.Delete(id);
+        _flightRepository.Delete(id);
 }

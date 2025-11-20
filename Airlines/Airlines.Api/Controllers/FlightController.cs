@@ -1,6 +1,4 @@
 ﻿using Airlines.Application.Services;
-using Airlines.Domain;
-using Airlines.Domain.Repositories;
 using Airlines.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,34 +9,23 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class FlightController : ControllerBase
+public class FlightController(FlightService _service, TicketService _ticketService) : ControllerBase
 {
-    private readonly FlightService _service;
-    private readonly IRepository<AirplaneModel> _modelRepository;
-
-    /// <summary>
-    /// Initializes the controller
-    /// </summary>
-    public FlightController(
-        FlightService service,
-        IRepository<AirplaneModel> modelRepository)
-    {
-        _service = service;
-        _modelRepository = modelRepository;
-    }
-
     /// <summary>
     /// Returns a list of all flights
     /// </summary>
     [HttpGet]
-    public IActionResult GetAll() =>
+    [ProducesResponseType(200)]
+    public ActionResult GetAll() =>
         Ok(_service.GetFlights());
 
     /// <summary>
     /// Returns information about flight by id
     /// </summary>
     [HttpGet("{id}")]
-    public IActionResult Get(int id)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult Get(int id)
     {
         var entity = _service.GetFlight(id);
         if (entity == null) return NotFound();
@@ -46,39 +33,69 @@ public class FlightController : ControllerBase
     }
 
     /// <summary>
+    /// Returns all tickets for this flight
+    /// </summary>
+    [HttpGet("{id}/tickets")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult GetTickets(int id)
+    {
+        var flight = _service.GetFlight(id);
+        if (flight == null) return NotFound();
+
+        var tickets = _ticketService
+            .GetTickets()
+            .Where(t => t.FlightInfo.Id == id)
+            .ToList();
+
+        return Ok(tickets);
+    }
+
+    /// <summary>
     /// Create a new flight
     /// </summary>
     [HttpPost]
-    public IActionResult Create([FromBody] FlightCreateDto dto)
+    [ProducesResponseType(201)]
+    public ActionResult Create([FromBody] FlightCreateDto dto)
     {
-        var model = _modelRepository.Read(dto.AirplaneModelId);
-        if (model == null)
-            return BadRequest("Invalid AirplaneModel ID");
-
-        var id = _service.CreateFlight(dto, model);
-        return CreatedAtAction(nameof(Get), new { id }, dto);
+        try
+        {
+            var id = _service.CreateFlight(dto);
+            return CreatedAtAction(nameof(Get), new { id }, dto);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
     /// Update flight by ID
     /// </summary>
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] FlightCreateDto dto)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult Update(int id, [FromBody] FlightCreateDto dto)
     {
-        var model = _modelRepository.Read(dto.AirplaneModelId);
-        if (model == null)
-            return BadRequest("Invalid AirplaneModel ID");
-
-        var updated = _service.UpdateFlight(id, dto, model);
-        if (updated == null) return NotFound();
-        return Ok(updated);
+        try
+        {
+            var updated = _service.UpdateFlight(id, dto);
+            if (updated == null) return NotFound();
+            return Ok(updated);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
     /// Delete flight by ID
     /// </summary>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    public ActionResult Delete(int id)
     {
         _service.DeleteFlight(id);
         return NoContent();

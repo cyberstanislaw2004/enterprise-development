@@ -11,7 +11,10 @@ public class InMemoryAirplaneFamilyRepository : InMemoryRepository<AirplaneFamil
     /// <summary>
     /// Initialize the repository
     /// </summary>
-    public InMemoryAirplaneFamilyRepository(Dataseeder? seeder) : base(seeder?.AirplaneFamilies) { }
+    public InMemoryAirplaneFamilyRepository(Dataseeder? seeder) : base(seeder?.AirplaneFamilies)
+    {
+
+    }
 
     /// <summary>
     /// Get ID of entity

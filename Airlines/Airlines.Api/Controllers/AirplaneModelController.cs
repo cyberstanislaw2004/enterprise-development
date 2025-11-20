@@ -1,6 +1,4 @@
 ﻿using Airlines.Application.Services;
-using Airlines.Domain;
-using Airlines.Domain.Repositories;
 using Airlines.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,34 +9,23 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class AirplaneModelController : ControllerBase
+public class AirplaneModelController(AirplaneModelService _service, FlightService _flightService) : ControllerBase
 {
-    private readonly AirplaneModelService _service;
-    private readonly IRepository<AirplaneFamily> _familyRepository;
-
-    /// <summary>
-    /// Initializes the controller
-    /// </summary>
-    public AirplaneModelController(
-        AirplaneModelService service,
-        IRepository<AirplaneFamily> familyRepository)
-    {
-        _service = service;
-        _familyRepository = familyRepository;
-    }
-
     /// <summary>
     /// Returns a list of all airplane models
     /// </summary>
     [HttpGet]
-    public IActionResult GetAll() =>
+    [ProducesResponseType(200)]
+    public ActionResult GetAll() =>
         Ok(_service.GetAirplaneModels());
 
     /// <summary>
     /// Returns information about airplane model by id
     /// </summary>
     [HttpGet("{id}")]
-    public IActionResult Get(int id)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult Get(int id)
     {
         var entity = _service.GetAirplaneModel(id);
         if (entity == null) return NotFound();
@@ -46,47 +33,69 @@ public class AirplaneModelController : ControllerBase
     }
 
     /// <summary>
+    /// Returns all flights for this airplane model
+    /// </summary>
+    [HttpGet("{id}/flights")]
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult GetFlights(int id)
+    {
+        var model = _service.GetAirplaneModel(id);
+        if (model == null) return NotFound();
+
+        var flights = _flightService
+            .GetFlights()
+            .Where(f => f.AirplaneModel.Id == id)
+            .ToList();
+
+        return Ok(flights);
+    }
+
+    /// <summary>
     /// Create a new airplane model
     /// </summary>
     [HttpPost]
-    public IActionResult Create([FromBody] AirplaneModelCreateDto dto)
+    [ProducesResponseType(201)]
+    public ActionResult Create([FromBody] AirplaneModelCreateDto dto)
     {
-        if (!dto.FamilyId.HasValue)
-            return BadRequest("You must specify FamilyId");
-
-        var family = _familyRepository.Read(dto.FamilyId.Value);
-
-        if (family == null)
-            return BadRequest("Invalid AirplaneFamily ID");
-
-        var id = _service.CreateAirplaneModel(dto, family);
-        return CreatedAtAction(nameof(Get), new { id }, dto);
+        try
+        {
+            var id = _service.CreateAirplaneModel(dto);
+            return CreatedAtAction(nameof(Get), new { id }, dto);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
     /// Update airplane model by ID
     /// </summary>
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] AirplaneModelCreateDto dto)
+    [ProducesResponseType(200)]
+    [ProducesResponseType(404)]
+    public ActionResult Update(int id, [FromBody] AirplaneModelCreateDto dto)
     {
-        if (!dto.FamilyId.HasValue)
-            return BadRequest("You must specify FamilyId");
-
-        var family = _familyRepository.Read(dto.FamilyId.Value);
-
-        if (family == null)
-            return BadRequest("Invalid AirplaneFamily ID");
-
-        var updated = _service.UpdateAirplaneModel(id, dto, family);
-        if (updated == null) return NotFound();
-        return Ok(updated);
+        try
+        {
+            var updated = _service.UpdateAirplaneModel(id, dto);
+            if (updated == null) return NotFound();
+            return Ok(updated);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     /// <summary>
     /// Delete airplane model by ID
     /// </summary>
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    [ProducesResponseType(204)]
+    [ProducesResponseType(404)]
+    public ActionResult Delete(int id)
     {
         _service.DeleteAirplaneModel(id);
         return NoContent();

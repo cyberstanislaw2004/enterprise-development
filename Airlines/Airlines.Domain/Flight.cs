@@ -53,5 +53,5 @@ public class Flight
     /// <summary>
     /// Airplane model
     /// </summary>
-    public required AirplaneModel? AirplaneModel { get; set; }
+    public virtual AirplaneModel? AirplaneModel { get; set; }
 }

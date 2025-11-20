@@ -1,6 +1,6 @@
-﻿using Airlines.Dto;
-using Airlines.Domain;
+﻿using Airlines.Domain;
 using Airlines.Domain.Repositories;
+using Airlines.Dto;
 
 namespace Airlines.Application.Services;
 

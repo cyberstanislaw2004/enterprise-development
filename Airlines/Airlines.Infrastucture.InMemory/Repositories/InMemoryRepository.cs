@@ -36,7 +36,7 @@ public abstract class InMemoryRepository<TEntity> : IRepository<TEntity> where T
     /// <summary>
     /// Generate ID for new entity
     /// </summary>
-    private int GenerateId() => 
+    private int GenerateId() =>
         _currentId++;
 
     /// <summary>

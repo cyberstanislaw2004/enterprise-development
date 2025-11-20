@@ -25,9 +25,9 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
     public List<Ticket> Read()
     {
         return dbContext.Tickets
-            .Include(t => t.FlightInfo)
-                .ThenInclude(f => f.AirplaneModel)
-                    .ThenInclude(m => m.AirplaneFamily)
+            .Include(t => t.FlightInfo!)
+                .ThenInclude(f => f.AirplaneModel!)
+                    .ThenInclude(m => m.AirplaneFamily!)
             .Include(t => t.PassengerInfo)
             .AsNoTracking()
             .ToList();
@@ -39,9 +39,9 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
     public Ticket? Read(int id)
     {
         return dbContext.Tickets
-            .Include(t => t.FlightInfo)
-                .ThenInclude(f => f.AirplaneModel)
-                    .ThenInclude(m => m.AirplaneFamily)
+            .Include(t => t.FlightInfo!)
+                .ThenInclude(f => f.AirplaneModel!)
+                    .ThenInclude(m => m.AirplaneFamily!)
             .Include(t => t.PassengerInfo)
             .AsNoTracking()
             .FirstOrDefault(x => x.Id == id);

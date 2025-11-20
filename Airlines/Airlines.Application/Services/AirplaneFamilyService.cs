@@ -1,6 +1,6 @@
-﻿using Airlines.Dto;
-using Airlines.Domain;
+﻿using Airlines.Domain;
 using Airlines.Domain.Repositories;
+using Airlines.Dto;
 
 namespace Airlines.Application.Services;
 
@@ -46,7 +46,7 @@ public class AirplaneFamilyService(IRepository<AirplaneFamily> repository)
     public AirplaneFamilyReadDto? GetAirplaneFamily(int id)
     {
         var entity = repository.Read(id);
-        
+
         if (entity == null)
             return null;
         else

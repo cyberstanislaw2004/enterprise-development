@@ -25,8 +25,8 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
     public List<Flight> Read()
     {
         return dbContext.Flights
-            .Include(x => x.AirplaneModel)
-                .ThenInclude(m => m.AirplaneFamily)
+            .Include(x => x.AirplaneModel!)
+                .ThenInclude(m => m.AirplaneFamily!)
             .AsNoTracking()
             .ToList();
     }
@@ -37,8 +37,8 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
     public Flight? Read(int id)
     {
         return dbContext.Flights
-            .Include(x => x.AirplaneModel)
-                .ThenInclude(m => m.AirplaneFamily)
+            .Include(x => x.AirplaneModel!)
+                .ThenInclude(m => m.AirplaneFamily!)
             .AsNoTracking()
             .FirstOrDefault(x => x.Id == id);
     }
