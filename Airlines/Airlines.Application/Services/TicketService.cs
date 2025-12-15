@@ -1,4 +1,5 @@
-﻿using Airlines.Domain;
+﻿using Airlines.Application.Interfaces;
+using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Dto;
 
@@ -7,7 +8,7 @@ namespace Airlines.Application.Services;
 /// <summary>
 /// Service for managing passengers entities
 /// </summary>
-public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Flight> _flightRepository, IRepository<Passenger> _passengerRepository)
+public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Flight> _flightRepository, IRepository<Passenger> _passengerRepository) : ITicketService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -69,77 +70,55 @@ public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Fl
     /// <summary>
     /// Create a new ticket record
     /// </summary>
-    public int CreateTicket(TicketCreateDto dto)
+    public async Task<TicketReadDto> CreateTicketAsync(TicketCreateDto dto)
     {
-        var flight = _flightRepository.Read(dto.FlightId);
-        if (flight == null) throw new ArgumentException("Invalid Flight ID");
+        var flight = await _flightRepository.ReadAsync(dto.FlightId)
+                     ?? throw new ArgumentException("Invalid Flight ID");
 
-        var passenger = _passengerRepository.Read(dto.PassengerId);
-        if (passenger == null) throw new ArgumentException("Invalid Passenger ID");
+        var passenger = await _passengerRepository.ReadAsync(dto.PassengerId)
+                        ?? throw new ArgumentException("Invalid Passenger ID");
 
-        var entity = new Ticket
-        {
-            Id = 0,
-            FlightId = flight.Id,
-            FlightInfo = null,
-            PassengerId = passenger.Id,
-            PassengerInfo = null,
-            SeatNumber = dto.SeatNumber,
-            HandLuggageAvailability = dto.HandLuggageAvailability,
-            TotalBaggageWeight = dto.TotalBaggageWeight
-        };
+        var ticket = MapDto(dto, flight, passenger);
+        var id = await _ticketRepository.CreateAsync(ticket);
 
-        return _ticketRepository.Create(entity);
+        ticket.Id = id;
+        return MapReadDto(ticket);
     }
 
     /// <summary>
     /// Get all tickets
     /// </summary>
-    public List<TicketReadDto> GetTickets() =>
-        _ticketRepository.Read().Select(MapReadDto).ToList();
+    public async Task<List<TicketReadDto>> GetTicketsAsync() =>
+        (await _ticketRepository.ReadAllAsync()).Select(MapReadDto).ToList();
 
     /// <summary>
     /// Get ticket by ID
     /// </summary>
-    public TicketReadDto? GetTicket(int id)
+    public async Task<TicketReadDto?> GetTicketAsync(int id)
     {
-        var entity = _ticketRepository.Read(id);
-
-        if (entity == null)
-            return null;
-        else
-            return MapReadDto(entity);
+        var ticket = await _ticketRepository.ReadAsync(id);
+        return ticket == null ? null : MapReadDto(ticket);
     }
 
     /// <summary>
     /// Update ticket by ID
     /// </summary>
-    public Ticket? UpdateTicket(int id, TicketCreateDto dto)
+    public async Task<TicketReadDto?> UpdateTicketAsync(int id, TicketCreateDto dto)
     {
-        var flight = _flightRepository.Read(dto.FlightId);
-        if (flight == null) throw new ArgumentException("Invalid Flight ID");
+        var flight = await _flightRepository.ReadAsync(dto.FlightId)
+                     ?? throw new ArgumentException("Invalid Flight ID");
 
-        var passenger = _passengerRepository.Read(dto.PassengerId);
-        if (passenger == null) throw new ArgumentException("Invalid Passenger ID");
+        var passenger = await _passengerRepository.ReadAsync(dto.PassengerId)
+                        ?? throw new ArgumentException("Invalid Passenger ID");
 
-        var entity = new Ticket
-        {
-            Id = 0,
-            FlightId = flight.Id,
-            FlightInfo = null,
-            PassengerId = passenger.Id,
-            PassengerInfo = null,
-            SeatNumber = dto.SeatNumber,
-            HandLuggageAvailability = dto.HandLuggageAvailability,
-            TotalBaggageWeight = dto.TotalBaggageWeight
-        };
-
-        return _ticketRepository.Update(id, entity);
+        var ticket = MapDto(dto, flight, passenger);
+        var updated = await _ticketRepository.UpdateAsync(id, ticket);
+        return updated == null ? null : MapReadDto(ticket);
     }
 
     /// <summary>
     /// Delete ticket by ID
     /// </summary>
-    public bool DeleteTicket(int id) =>
-        _ticketRepository.Delete(id);
+    public async Task<bool> DeleteTicketAsync(int id) =>
+        await _ticketRepository.DeleteAsync(id);
 }

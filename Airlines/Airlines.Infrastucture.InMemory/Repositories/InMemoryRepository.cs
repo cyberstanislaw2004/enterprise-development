@@ -5,7 +5,7 @@ namespace Airlines.Infrastructure.InMemory.Repositories;
 /// <summary>
 /// Abstract class for inMemory repository implementation
 /// </summary>
-public abstract class InMemoryRepository<TEntity> : IRepository<TEntity> where TEntity : class
+public abstract class InMemoryRepository<TEntity> : IRepositoryNoAsync<TEntity> where TEntity : class
 {
     private readonly List<TEntity> _items = [];
 

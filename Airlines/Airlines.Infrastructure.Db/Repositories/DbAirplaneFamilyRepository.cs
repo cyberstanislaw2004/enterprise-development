@@ -12,43 +12,40 @@ public class DbAirplaneFamilyRepository(AppDbContext dbContext) : IRepository<Ai
     /// <summary>
     /// Create a new AirplaneFamily record
     /// </summary>
-    public int Create(AirplaneFamily entity)
+    public async Task<int> CreateAsync(AirplaneFamily entity)
     {
-        dbContext.AirplaneFamilies.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.AirplaneFamilies.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all AirplaneFamily records
     /// </summary>
-    public List<AirplaneFamily> Read()
+    public async Task<List<AirplaneFamily>> ReadAllAsync()
     {
-        return dbContext.AirplaneFamilies.AsNoTracking().ToList();
+        return await dbContext.AirplaneFamilies.AsNoTracking().ToListAsync();
     }
 
     /// <summary>
     /// Return AirplaneFamily by ID
     /// </summary>
-    public AirplaneFamily? Read(int id)
+    public async Task<AirplaneFamily?> ReadAsync(int id)
     {
-        return dbContext.AirplaneFamilies.AsNoTracking().FirstOrDefault(x => x.Id == id);
+        return await dbContext.AirplaneFamilies.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
     }
 
     /// <summary>
     /// Update AirplaneFamily by ID
     /// </summary>
-    public AirplaneFamily? Update(int id, AirplaneFamily entity)
+    public async Task<AirplaneFamily?> UpdateAsync(int id, AirplaneFamily entity)
     {
-        var existingEntity = dbContext.AirplaneFamilies.Find(id);
-        if (existingEntity == null)
-        {
-            return null;
-        }
+        var existingEntity = await dbContext.AirplaneFamilies.FindAsync(id);
+        if (existingEntity == null) return null;
 
         existingEntity.Name = entity.Name;
         existingEntity.Manufacturer = entity.Manufacturer;
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
 
         return existingEntity;
     }
@@ -56,18 +53,13 @@ public class DbAirplaneFamilyRepository(AppDbContext dbContext) : IRepository<Ai
     /// <summary>
     /// Delete AirplaneFamily by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var existingEntity = dbContext.AirplaneFamilies.Find(id);
-
-        if (existingEntity == null)
-        {
-            return false;
-        }
+        var existingEntity = await dbContext.AirplaneFamilies.FindAsync(id);
+        if (existingEntity == null) return false;
 
         dbContext.AirplaneFamilies.Remove(existingEntity);
-        dbContext.SaveChanges();
-
+        await dbContext.SaveChangesAsync();
         return true;
     }
 }

@@ -12,69 +12,63 @@ public class DbAirplaneModelRepository(AppDbContext dbContext) : IRepository<Air
     /// <summary>
     /// Create a new AirplaneModel record
     /// </summary>
-    public int Create(AirplaneModel entity)
+    public async Task<int> CreateAsync(AirplaneModel entity)
     {
-        dbContext.AirplaneModels.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.AirplaneModels.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all AirplaneModel records
     /// </summary>
-    public List<AirplaneModel> Read()
+    public async Task<List<AirplaneModel>> ReadAllAsync()
     {
-        return dbContext.AirplaneModels.Include(x => x.AirplaneFamily).AsNoTracking().ToList();
+        return await dbContext.AirplaneModels
+            .Include(x => x.AirplaneFamily)
+            .AsNoTracking()
+            .ToListAsync();
     }
 
     /// <summary>
     /// Return AirplaneModel by ID
     /// </summary>
-    public AirplaneModel? Read(int id)
+    public async Task<AirplaneModel?> ReadAsync(int id)
     {
-        return dbContext.AirplaneModels
+        return await dbContext.AirplaneModels
             .Include(x => x.AirplaneFamily)
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     /// <summary>
     /// Update AirplaneModel by ID
     /// </summary>
-    public AirplaneModel? Update(int id, AirplaneModel entity)
+    public async Task<AirplaneModel?> UpdateAsync(int id, AirplaneModel entity)
     {
-        var existingEntity = dbContext.AirplaneModels.Find(id);
-
-        if (existingEntity == null)
-        {
-            return null;
-        }
+        var existingEntity = await dbContext.AirplaneModels.FindAsync(id);
+        if (existingEntity == null) return null;
 
         existingEntity.ModelName = entity.ModelName;
         existingEntity.FamilyId = entity.FamilyId;
         existingEntity.RangeOfFlight = entity.RangeOfFlight;
         existingEntity.PassengerCapacity = entity.PassengerCapacity;
         existingEntity.CargoCapacity = entity.CargoCapacity;
-        dbContext.SaveChanges();
 
+        await dbContext.SaveChangesAsync();
         return existingEntity;
     }
 
     /// <summary>
     /// Delete AirplaneModel by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var existingEntity = dbContext.AirplaneModels.Find(id);
-
-        if (existingEntity == null)
-        {
-            return false;
-        }
+        var existingEntity = await dbContext.AirplaneModels.FindAsync(id);
+        if (existingEntity == null) return false;
 
         dbContext.AirplaneModels.Remove(existingEntity);
-        dbContext.SaveChanges();
-
+        await dbContext.SaveChangesAsync();
         return true;
     }
 }

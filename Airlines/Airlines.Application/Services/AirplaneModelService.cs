@@ -1,4 +1,5 @@
-﻿using Airlines.Domain;
+﻿using Airlines.Application.Interfaces;
+using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Dto;
 
@@ -7,7 +8,7 @@ namespace Airlines.Application.Services;
 /// <summary>
 /// Service for managing airplane models entities
 /// </summary>
-public class AirplaneModelService(IRepository<AirplaneModel> _modelRepository, IRepository<AirplaneFamily> _familyRepository)
+public class AirplaneModelService(IRepository<AirplaneModel> _modelRepository, IRepository<AirplaneFamily> _familyRepository) : IAirplaneModelService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -42,57 +43,74 @@ public class AirplaneModelService(IRepository<AirplaneModel> _modelRepository, I
     /// <summary>
     /// Create a new airplane model record
     /// </summary>
-    public int CreateAirplaneModel(AirplaneModelCreateDto entity)
+    public async Task<AirplaneModelReadDto> CreateAirplaneModelAsync(AirplaneModelCreateDto dto)
     {
-        if (!entity.FamilyId.HasValue)
+        if (!dto.FamilyId.HasValue)
             throw new ArgumentException("FamilyId is required");
 
-        var family = _familyRepository.Read(entity.FamilyId.Value);
+        var family = await _familyRepository.ReadAsync(dto.FamilyId.Value);
         if (family == null)
             throw new ArgumentException("Invalid AirplaneFamily ID");
 
-        var model = MapDto(entity, family);
-        return _modelRepository.Create(model);
+        var model = MapDto(dto, family);
+        var id = await _modelRepository.CreateAsync(model);
+        var created = await _modelRepository.ReadAsync(id);
+
+        return MapReadDto(created!);
     }
 
     /// <summary>
     /// Get all airplane models
     /// </summary>
-    public List<AirplaneModelReadDto> GetAirplaneModels() =>
-        _modelRepository.Read().Select(MapReadDto).ToList();
+    public async Task<List<AirplaneModelReadDto>> GetAirplaneModelsAsync()
+    {
+        var models = await _modelRepository.ReadAllAsync();
+        return models.Select(MapReadDto).ToList();
+    }
 
     /// <summary>
     /// Get airplane model by ID
     /// </summary>
-    public AirplaneModelReadDto? GetAirplaneModel(int id)
+    public async Task<AirplaneModelReadDto?> GetAirplaneModelAsync(int id)
     {
-        var entity = _modelRepository.Read(id);
+        var entity = await _modelRepository.ReadAsync(id);
+        return entity == null ? null : MapReadDto(entity);
+    }
 
-        if (entity == null)
-            return null;
-        else
-            return MapReadDto(entity);
+    /// <summary>
+    /// Get airplane models by family ID
+    /// </summary>
+    public async Task<List<AirplaneModelReadDto>> GetAirplaneModelsByFamilyIdAsync(int familyId)
+    {
+        var models = await _modelRepository.ReadAllAsync();
+        var filteredModels = models.Where(m => m.FamilyId == familyId).ToList();
+
+        return filteredModels.Select(MapReadDto).ToList();
     }
 
     /// <summary>
     /// Update airplane model by ID
     /// </summary>
-    public AirplaneModel? UpdateAirplaneModel(int id, AirplaneModelCreateDto dto)
+    public async Task<AirplaneModelReadDto?> UpdateAirplaneModelAsync(int id, AirplaneModelCreateDto dto)
     {
         if (!dto.FamilyId.HasValue)
             throw new ArgumentException("FamilyId is required");
 
-        var family = _familyRepository.Read(dto.FamilyId.Value);
+        var family = await _familyRepository.ReadAsync(dto.FamilyId.Value);
         if (family == null)
             throw new ArgumentException("Invalid AirplaneFamily ID");
 
         var entity = MapDto(dto, family);
-        return _modelRepository.Update(id, entity);
+        var updated = await _modelRepository.UpdateAsync(id, entity);
+
+        return updated == null ? null : MapReadDto(updated);
     }
 
     /// <summary>
     /// Delete airplane model by ID
     /// </summary>
-    public bool DeleteAirplaneModel(int id) =>
-        _modelRepository.Delete(id);
+    public async Task<bool> DeleteAirplaneModelAsync(int id)
+    {
+        return await _modelRepository.DeleteAsync(id);
+    }
 }

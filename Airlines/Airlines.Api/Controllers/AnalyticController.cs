@@ -1,4 +1,4 @@
-﻿using Airlines.Application.Services;
+﻿using Airlines.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Airlines.Api.Controllers;
@@ -8,7 +8,7 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class AnalyticController(AnalyticService _service) : ControllerBase
+public class AnalyticController(IAnalyticService _service) : ControllerBase
 {
     /// <summary>
     /// Top 5 flights by number of passengers
@@ -16,8 +16,8 @@ public class AnalyticController(AnalyticService _service) : ControllerBase
     [HttpGet("top-five-flights")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public ActionResult GetTopFiveFlights() =>
-        Ok(_service.GetTopFiveFlightsByPassengerCount());
+    public async Task<ActionResult> GetTopFiveFlights() =>
+        Ok(await _service.GetTopFiveFlightsByPassengerCountAsync());
 
     /// <summary>
     /// Flights with minimum duration
@@ -25,8 +25,8 @@ public class AnalyticController(AnalyticService _service) : ControllerBase
     [HttpGet("min-duration-flights")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public ActionResult GetMinDurationFlights() =>
-        Ok(_service.GetFlightsWithMinDuration());
+    public async Task<ActionResult> GetMinDurationFlights() =>
+        Ok(await _service.GetFlightsWithMinDurationAsync());
 
     /// <summary>
     /// Passengers on the flight with zero baggage, ordered by full name
@@ -34,8 +34,8 @@ public class AnalyticController(AnalyticService _service) : ControllerBase
     [HttpGet("flight/{flightNumber}/zero-baggage-passengers")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public ActionResult GetPassengersWithZeroBaggage(string flightNumber) =>
-        Ok(_service.GetPassengersWithZeroBaggageOnFlight(flightNumber));
+    public async Task<ActionResult> GetPassengersWithZeroBaggage(string flightNumber) =>
+        Ok(await _service.GetPassengersWithZeroBaggageOnFlightAsync(flightNumber));
 
     /// <summary>
     /// Summary of all flights of the model during period
@@ -43,8 +43,8 @@ public class AnalyticController(AnalyticService _service) : ControllerBase
     [HttpGet("model/{modelId}/flights")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public ActionResult GetFlightsOfModelInPeriod(int modelId, [FromQuery] DateOnly? fromDate, [FromQuery] DateOnly? toDate) =>
-        Ok(_service.GetFlightsOfModelInPeriod(modelId, fromDate, toDate));
+    public async Task<ActionResult> GetFlightsOfModelInPeriod(int modelId, [FromQuery] DateOnly? fromDate, [FromQuery] DateOnly? toDate) =>
+        Ok(await _service.GetFlightsOfModelInPeriodAsync(modelId, fromDate, toDate));
 
     /// <summary>
     /// Flights by departure and arrival codes
@@ -52,6 +52,6 @@ public class AnalyticController(AnalyticService _service) : ControllerBase
     [HttpGet("route")]
     [ProducesResponseType(200)]
     [ProducesResponseType(404)]
-    public ActionResult GetFlightsByRoute([FromQuery] string departureCode, [FromQuery] string arrivalCode) =>
-        Ok(_service.GetFlightsByRoute(departureCode, arrivalCode));
+    public async Task<ActionResult> GetFlightsByRoute([FromQuery] string departureCode, [FromQuery] string arrivalCode) =>
+        Ok(await _service.GetFlightsByRouteAsync(departureCode, arrivalCode));
 }

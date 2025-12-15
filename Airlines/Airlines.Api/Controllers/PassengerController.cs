@@ -1,4 +1,4 @@
-﻿using Airlines.Application.Services;
+﻿using Airlines.Application.Interfaces;
 using Airlines.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,43 +9,48 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class PassengerController(PassengerService _service, TicketService _ticketService) : ControllerBase
+public class PassengerController(IPassengerService _service, ITicketService _ticketService) : ControllerBase
 {
     /// <summary>
     /// Returns a list of all passengers
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(200)]
-    public ActionResult GetAll() =>
-        Ok(_service.GetPassengers());
+    [ProducesResponseType(typeof(List<PassengerReadDto>), 200)]
+    public async Task<ActionResult<List<PassengerReadDto>>> GetAll()
+    {
+        var passengers = await _service.GetPassengersAsync();
+        return Ok(passengers);
+    }
 
     /// <summary>
     /// Returns information about passenger by id
     /// </summary>
     [HttpGet("{id}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(PassengerReadDto), 200)]
     [ProducesResponseType(404)]
-    public ActionResult Get(int id)
+    public async Task<ActionResult<PassengerReadDto>> Get(int id)
     {
-        var entity = _service.GetPassenger(id);
-        if (entity == null)
+        var passenger = await _service.GetPassengerAsync(id);
+
+        if (passenger == null)
             return NotFound();
-        return Ok(entity);
+
+        return Ok(passenger);
     }
 
     /// <summary>
     /// Returns all tickets for this passenger
     /// </summary>
     [HttpGet("{id}/tickets")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(List<TicketReadDto>), 200)]
     [ProducesResponseType(404)]
-    public ActionResult GetTickets(int id)
+    public async Task<ActionResult<List<TicketReadDto>>> GetTickets(int id)
     {
-        var passenger = _service.GetPassenger(id);
-        if (passenger == null) return NotFound();
+        var passenger = await _service.GetPassengerAsync(id);
+        if (passenger == null)
+            return NotFound();
 
-        var tickets = _ticketService
-            .GetTickets()
+        var tickets = (await _ticketService.GetTicketsAsync())
             .Where(t => t.PassengerInfo.Id == id)
             .ToList();
 
@@ -56,24 +61,26 @@ public class PassengerController(PassengerService _service, TicketService _ticke
     /// Create a new passenger
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(201)]
-    public ActionResult Create([FromBody] PassengerCreateDto dto)
+    [ProducesResponseType(typeof(PassengerReadDto), 201)]
+    public async Task<ActionResult<PassengerReadDto>> Create([FromBody] PassengerCreateDto dto)
     {
-        var id = _service.CreatePassenger(dto);
-        return CreatedAtAction(nameof(Get), new { id }, dto);
+        var created = await _service.CreatePassengerAsync(dto);
+        return CreatedAtAction(nameof(Get), new { id = created.Id }, created);
     }
 
     /// <summary>
     /// Update passenger by ID
     /// </summary>
     [HttpPut("{id}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(PassengerReadDto), 200)]
     [ProducesResponseType(404)]
-    public ActionResult Update(int id, [FromBody] PassengerCreateDto dto)
+    public async Task<ActionResult<PassengerReadDto>> Update(int id, [FromBody] PassengerCreateDto dto)
     {
-        var updated = _service.UpdatePassenger(id, dto);
+        var updated = await _service.UpdatePassengerAsync(id, dto);
+
         if (updated == null)
             return NotFound();
+
         return Ok(updated);
     }
 
@@ -82,9 +89,13 @@ public class PassengerController(PassengerService _service, TicketService _ticke
     /// </summary>
     [HttpDelete("{id}")]
     [ProducesResponseType(204)]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        _service.DeletePassenger(id);
+        var deleted = await _service.DeletePassengerAsync(id);
+
+        if (!deleted)
+            return NotFound();
+
         return NoContent();
     }
 }

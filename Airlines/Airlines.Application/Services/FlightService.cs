@@ -1,4 +1,5 @@
-﻿using Airlines.Domain;
+﻿using Airlines.Application.Interfaces;
+using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Dto;
 
@@ -7,7 +8,7 @@ namespace Airlines.Application.Services;
 /// <summary>
 /// Service for managing flights entities
 /// </summary>
-public class FlightService(IRepository<Flight> _flightRepository, IRepository<AirplaneModel> _modelRepository)
+public class FlightService(IRepository<Flight> _flightRepository, IRepository<AirplaneModel> _modelRepository) : IFlightService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -59,79 +60,72 @@ public class FlightService(IRepository<Flight> _flightRepository, IRepository<Ai
     /// <summary>
     /// Create a new flight record
     /// </summary>
-    public int CreateFlight(FlightCreateDto dto)
+    public async Task<FlightReadDto> CreateFlightAsync(FlightCreateDto dto)
     {
-        var model = _modelRepository.Read(dto.AirplaneModelId);
+        var model = await _modelRepository.ReadAsync(dto.AirplaneModelId);
         if (model == null)
             throw new ArgumentException("Invalid AirplaneModel ID");
 
-        var entity = new Flight
-        {
-            Id = 0,
-            FlightNumber = dto.FlightNumber,
-            DepartureAirportCode = dto.DepartureAirportCode,
-            DestinationAirportCode = dto.DestinationAirportCode,
-            DepartureDate = dto.DepartureDate,
-            ArrivalDate = dto.ArrivalDate,
-            DepartureTime = dto.DepartureTime,
-            Duration = dto.Duration,
-            AirplaneModelId = model.Id,
-            AirplaneModel = null // не присваиваем объект модели напрямую
-        };
+        var entity = MapDto(dto, model);
+        var id = await _flightRepository.CreateAsync(entity);
+        var created = await _flightRepository.ReadAsync(id);
 
-        return _flightRepository.Create(entity);
+        return MapReadDto(created!);
     }
 
     /// <summary>
     /// Get all flights
     /// </summary>
-    public List<FlightReadDto> GetFlights() =>
-        _flightRepository.Read().Select(MapReadDto).ToList();
+    public async Task<List<FlightReadDto>> GetFlightsAsync()
+    {
+        var flights = await _flightRepository.ReadAllAsync();
+        return flights.Select(MapReadDto).ToList();
+    }
 
     /// <summary>
     /// Get flight by ID
     /// </summary>
-    public FlightReadDto? GetFlight(int id)
+    public async Task<FlightReadDto?> GetFlightAsync(int id)
     {
-        var entity = _flightRepository.Read(id);
+        var entity = await _flightRepository.ReadAsync(id);
+        return entity == null ? null : MapReadDto(entity);
+    }
 
-        if (entity == null)
-            return null;
-        else
-            return MapReadDto(entity);
+    /// <summary>
+    /// Get all flights for a specific airplane model
+    /// </summary>
+    public async Task<List<FlightReadDto>> GetFlightsByAirplaneModelIdAsync(int airplaneModelId)
+    {
+        var flights = await _flightRepository.ReadAllAsync();
+
+        // фильтруем по модели самолета
+        var filteredFlights = flights
+            .Where(f => f.AirplaneModelId == airplaneModelId)
+            .ToList();
+
+        return filteredFlights.Select(MapReadDto).ToList();
     }
 
     /// <summary>
     /// Update flight by ID
     /// </summary>
-    public Flight? UpdateFlight(int id, FlightCreateDto dto)
+    public async Task<FlightReadDto?> UpdateFlightAsync(int id, FlightCreateDto dto)
     {
-        {
-            var model = _modelRepository.Read(dto.AirplaneModelId);
-            if (model == null)
-                throw new ArgumentException("Invalid AirplaneModel ID");
+        var model = await _modelRepository.ReadAsync(dto.AirplaneModelId);
+        if (model == null)
+            throw new ArgumentException("Invalid AirplaneModel ID");
 
-            var entity = new Flight
-            {
-                Id = 0,
-                FlightNumber = dto.FlightNumber,
-                DepartureAirportCode = dto.DepartureAirportCode,
-                DestinationAirportCode = dto.DestinationAirportCode,
-                DepartureDate = dto.DepartureDate,
-                ArrivalDate = dto.ArrivalDate,
-                DepartureTime = dto.DepartureTime,
-                Duration = dto.Duration,
-                AirplaneModelId = model.Id,
-                AirplaneModel = null
-            };
+        var entity = MapDto(dto, model);
+        var updated = await _flightRepository.UpdateAsync(id, entity);
 
-            return _flightRepository.Update(id, entity);
-        }
+        return updated == null ? null : MapReadDto(updated);
     }
 
     /// <summary>
     /// Delete flight by ID
     /// </summary>
-    public bool DeleteFlight(int id) =>
-        _flightRepository.Delete(id);
+    public async Task<bool> DeleteFlightAsync(int id)
+    {
+        return await _flightRepository.DeleteAsync(id);
+    }
 }

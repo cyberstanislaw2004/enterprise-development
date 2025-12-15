@@ -12,67 +12,61 @@ public class DbPassengerRepository(AppDbContext dbContext) : IRepository<Passeng
     /// <summary>
     /// Create a new Passenger record
     /// </summary>
-    public int Create(Passenger entity)
+    public async Task<int> CreateAsync(Passenger entity)
     {
-        dbContext.Passengers.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.Passengers.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all Passenger records
     /// </summary>
-    public List<Passenger> Read()
+    public async Task<List<Passenger>> ReadAllAsync()
     {
-        return dbContext.Passengers
+        return await dbContext.Passengers
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
     }
 
     /// <summary>
     /// Return Passenger by ID
     /// </summary>
-    public Passenger? Read(int id)
+    public async Task<Passenger?> ReadAsync(int id)
     {
-        return dbContext.Passengers
+        return await dbContext.Passengers
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     /// <summary>
     /// Update Passenger by ID
     /// </summary>
-    public Passenger? Update(int id, Passenger entity)
+    public async Task<Passenger?> UpdateAsync(int id, Passenger entity)
     {
-        var existingEntity = dbContext.Passengers.Find(id);
+        var existingEntity = await dbContext.Passengers.FindAsync(id);
         if (existingEntity == null)
-        {
             return null;
-        }
 
         existingEntity.NumberOfPassport = entity.NumberOfPassport;
         existingEntity.FullName = entity.FullName;
         existingEntity.BirthDate = entity.BirthDate;
-        dbContext.SaveChanges();
 
+        await dbContext.SaveChangesAsync();
         return existingEntity;
     }
 
     /// <summary>
     /// Delete Passenger by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var existingEntity = dbContext.Passengers.Find(id);
-
+        var existingEntity = await dbContext.Passengers.FindAsync(id);
         if (existingEntity == null)
-        {
             return false;
-        }
 
         dbContext.Passengers.Remove(existingEntity);
-        dbContext.SaveChanges();
-
+        await dbContext.SaveChangesAsync();
         return true;
     }
 }

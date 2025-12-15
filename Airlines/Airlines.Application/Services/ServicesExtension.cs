@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Airlines.Application.Interfaces;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Airlines.Application.Services;
 
@@ -12,12 +13,12 @@ public static class ServicesExtension
     /// </summary>
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
-        services.AddScoped<AirplaneFamilyService>();
-        services.AddScoped<AirplaneModelService>();
-        services.AddScoped<FlightService>();
-        services.AddScoped<PassengerService>();
-        services.AddScoped<TicketService>();
-        services.AddScoped<AnalyticService>();
+        services.AddScoped<IAirplaneFamilyService, AirplaneFamilyService>();
+        services.AddScoped<IAirplaneModelService, AirplaneModelService>();
+        services.AddScoped<IFlightService, FlightService>();
+        services.AddScoped<IPassengerService, PassengerService>();
+        services.AddScoped<ITicketService, TicketService>();
+        services.AddScoped<IAnalyticService, AnalyticService>();
 
         return services;
     }

@@ -1,4 +1,5 @@
-﻿using Airlines.Domain;
+﻿using Airlines.Application.Interfaces;
+using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Dto;
 
@@ -7,7 +8,7 @@ namespace Airlines.Application.Services;
 /// <summary>
 /// Service for managing passengers entities
 /// </summary>
-public class PassengerService(IRepository<Passenger> repository)
+public class PassengerService(IRepository<Passenger> repository) : IPassengerService
 {
     /// <summary>
     /// Converts create DTO to entity
@@ -32,37 +33,45 @@ public class PassengerService(IRepository<Passenger> repository)
     /// <summary>
     /// Create a new passenger record
     /// </summary>
-    public int CreatePassenger(PassengerCreateDto entity) =>
-        repository.Create(MapDto(entity));
+    public async Task<PassengerReadDto> CreatePassengerAsync(PassengerCreateDto dto)
+    {
+        var id = await repository.CreateAsync(MapDto(dto));
+        var created = await repository.ReadAsync(id);
+        return MapReadDto(created!);
+    }
 
     /// <summary>
     /// Get all passengers
     /// </summary>
-    public List<PassengerReadDto> GetPassengers() =>
-        repository.Read().Select(MapReadDto).ToList();
+    public async Task<List<PassengerReadDto>> GetPassengersAsync()
+    {
+        var entities = await repository.ReadAllAsync();
+        return entities.Select(MapReadDto).ToList();
+    }
 
     /// <summary>
     /// Get passenger by ID
     /// </summary>
-    public PassengerReadDto? GetPassenger(int id)
+    public async Task<PassengerReadDto?> GetPassengerAsync(int id)
     {
-        var entity = repository.Read(id);
-
-        if (entity == null)
-            return null;
-        else
-            return MapReadDto(entity);
+        var entity = await repository.ReadAsync(id);
+        return entity == null ? null : MapReadDto(entity);
     }
 
     /// <summary>
     /// Update passenger by ID
     /// </summary>
-    public Passenger? UpdatePassenger(int id, PassengerCreateDto entity) =>
-        repository.Update(id, MapDto(entity));
+    public async Task<PassengerReadDto?> UpdatePassengerAsync(int id, PassengerCreateDto dto)
+    {
+        var updated = await repository.UpdateAsync(id, MapDto(dto));
+        return updated == null ? null : MapReadDto(updated);
+    }
 
     /// <summary>
     /// Delete passenger by ID
     /// </summary>
-    public bool DeletePassenger(int id) =>
-        repository.Delete(id);
+    public async Task<bool> DeletePassengerAsync(int id)
+    {
+        return await repository.DeleteAsync(id);
+    }
 }

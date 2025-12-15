@@ -1,4 +1,4 @@
-﻿using Airlines.Application.Services;
+﻿using Airlines.Application.Interfaces;
 using Airlines.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,26 +9,32 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class AirplaneModelController(AirplaneModelService _service, FlightService _flightService) : ControllerBase
+public class AirplaneModelController(IAirplaneModelService _service, IFlightService _flightService) : ControllerBase
 {
     /// <summary>
     /// Returns a list of all airplane models
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(200)]
-    public ActionResult GetAll() =>
-        Ok(_service.GetAirplaneModels());
+    [ProducesResponseType(typeof(List<AirplaneModelReadDto>), 200)]
+    public async Task<ActionResult<List<AirplaneModelReadDto>>> GetAll()
+    {
+        var models = await _service.GetAirplaneModelsAsync();
+        return Ok(models);
+    }
+
 
     /// <summary>
     /// Returns information about airplane model by id
     /// </summary>
     [HttpGet("{id}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(List<AirplaneModelReadDto>), 200)]
     [ProducesResponseType(404)]
-    public ActionResult Get(int id)
+    public async Task<ActionResult<AirplaneModelReadDto>> Get(int id)
     {
-        var entity = _service.GetAirplaneModel(id);
-        if (entity == null) return NotFound();
+        var entity = await _service.GetAirplaneModelAsync(id);
+        if (entity == null)
+            return NotFound();
+
         return Ok(entity);
     }
 
@@ -36,18 +42,15 @@ public class AirplaneModelController(AirplaneModelService _service, FlightServic
     /// Returns all flights for this airplane model
     /// </summary>
     [HttpGet("{id}/flights")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(List<FlightReadDto>), 200)]
     [ProducesResponseType(404)]
-    public ActionResult GetFlights(int id)
+    public async Task<ActionResult<List<FlightReadDto>>> GetFlights(int id)
     {
-        var model = _service.GetAirplaneModel(id);
-        if (model == null) return NotFound();
+        var model = await _service.GetAirplaneModelAsync(id);
+        if (model == null)
+            return NotFound();
 
-        var flights = _flightService
-            .GetFlights()
-            .Where(f => f.AirplaneModel.Id == id)
-            .ToList();
-
+        var flights = await _flightService.GetFlightsByAirplaneModelIdAsync(id);
         return Ok(flights);
     }
 
@@ -55,13 +58,18 @@ public class AirplaneModelController(AirplaneModelService _service, FlightServic
     /// Create a new airplane model
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(201)]
-    public ActionResult Create([FromBody] AirplaneModelCreateDto dto)
+    [ProducesResponseType(typeof(AirplaneModelReadDto), 201)]
+    public async Task<ActionResult<AirplaneModelReadDto>> Create([FromBody] AirplaneModelCreateDto dto)
     {
         try
         {
-            var id = _service.CreateAirplaneModel(dto);
-            return CreatedAtAction(nameof(Get), new { id }, dto);
+            var created = await _service.CreateAirplaneModelAsync(dto);
+
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = created.Id },
+                created
+            );
         }
         catch (ArgumentException ex)
         {
@@ -73,14 +81,16 @@ public class AirplaneModelController(AirplaneModelService _service, FlightServic
     /// Update airplane model by ID
     /// </summary>
     [HttpPut("{id}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(AirplaneModelReadDto), 200)]
     [ProducesResponseType(404)]
-    public ActionResult Update(int id, [FromBody] AirplaneModelCreateDto dto)
+    public async Task<ActionResult<AirplaneModelReadDto>> Update(int id, [FromBody] AirplaneModelCreateDto dto)
     {
         try
         {
-            var updated = _service.UpdateAirplaneModel(id, dto);
-            if (updated == null) return NotFound();
+            var updated = await _service.UpdateAirplaneModelAsync(id, dto);
+            if (updated == null)
+                return NotFound();
+
             return Ok(updated);
         }
         catch (ArgumentException ex)
@@ -95,9 +105,12 @@ public class AirplaneModelController(AirplaneModelService _service, FlightServic
     [HttpDelete("{id}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        _service.DeleteAirplaneModel(id);
+        var deleted = await _service.DeleteAirplaneModelAsync(id);
+        if (!deleted)
+            return NotFound();
+
         return NoContent();
     }
 }

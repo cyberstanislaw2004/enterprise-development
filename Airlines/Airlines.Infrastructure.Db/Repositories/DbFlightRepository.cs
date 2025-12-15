@@ -12,47 +12,44 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
     /// <summary>
     /// Create a new Flight record
     /// </summary>
-    public int Create(Flight entity)
+    public async Task<int> CreateAsync(Flight entity)
     {
-        dbContext.Flights.Add(entity);
-        dbContext.SaveChanges();
+        await dbContext.Flights.AddAsync(entity);
+        await dbContext.SaveChangesAsync();
         return entity.Id;
     }
 
     /// <summary>
     /// Return all Flight records
     /// </summary>
-    public List<Flight> Read()
+    public async Task<List<Flight>> ReadAllAsync()
     {
-        return dbContext.Flights
+        return await dbContext.Flights
             .Include(x => x.AirplaneModel!)
                 .ThenInclude(m => m.AirplaneFamily!)
             .AsNoTracking()
-            .ToList();
+            .ToListAsync();
     }
 
     /// <summary>
     /// Return Flight by ID
     /// </summary>
-    public Flight? Read(int id)
+    public async Task<Flight?> ReadAsync(int id)
     {
-        return dbContext.Flights
+        return await dbContext.Flights
             .Include(x => x.AirplaneModel!)
                 .ThenInclude(m => m.AirplaneFamily!)
             .AsNoTracking()
-            .FirstOrDefault(x => x.Id == id);
+            .FirstOrDefaultAsync(x => x.Id == id);
     }
 
     /// <summary>
     /// Update Flight by ID
     /// </summary>
-    public Flight? Update(int id, Flight entity)
+    public async Task<Flight?> UpdateAsync(int id, Flight entity)
     {
-        var existingEntity = dbContext.Flights.Find(id);
-        if (existingEntity == null)
-        {
-            return null;
-        }
+        var existingEntity = await dbContext.Flights.FindAsync(id);
+        if (existingEntity == null) return null;
 
         existingEntity.FlightNumber = entity.FlightNumber;
         existingEntity.DepartureAirportCode = entity.DepartureAirportCode;
@@ -63,25 +60,20 @@ public class DbFlightRepository(AppDbContext dbContext) : IRepository<Flight>
         existingEntity.Duration = entity.Duration;
         existingEntity.AirplaneModelId = entity.AirplaneModelId;
 
-        dbContext.SaveChanges();
+        await dbContext.SaveChangesAsync();
         return existingEntity;
     }
 
     /// <summary>
     /// Delete Flight by ID
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var existingEntity = dbContext.Flights.Find(id);
-
-        if (existingEntity == null)
-        {
-            return false;
-        }
+        var existingEntity = await dbContext.Flights.FindAsync(id);
+        if (existingEntity == null) return false;
 
         dbContext.Flights.Remove(existingEntity);
-        dbContext.SaveChanges();
-
+        await dbContext.SaveChangesAsync();
         return true;
     }
 }

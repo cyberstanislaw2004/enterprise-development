@@ -1,6 +1,8 @@
-﻿using Airlines.Domain;
+﻿using Airlines.Application.Interfaces;
+using Airlines.Domain;
 using Airlines.Domain.Repositories;
 using Airlines.Dto;
+using Airlines.Infrastructure.Db.Repositories;
 
 namespace Airlines.Application.Services;
 
@@ -11,35 +13,23 @@ public class AnalyticService(
     IRepository<Flight> flightRepository,
     IRepository<Ticket> ticketRepository,
     IRepository<Passenger> passengerRepository)
+    : IAnalyticService
 {
     /// <summary>
     /// Display the top 5 flights by the number of passengers carried.
     /// </summary>
-    public List<FlightPassengerCountDto> GetTopFiveFlightsByPassengerCount()
+    public async Task<List<FlightPassengerCountDto>> GetTopFiveFlightsByPassengerCountAsync()
     {
-        var flights = flightRepository.Read();
-        var tickets = ticketRepository.Read();
+        var flights = await flightRepository.ReadAllAsync();
+        var tickets = await ticketRepository.ReadAllAsync();
 
-        int? GetFlightId(Ticket t)
-        {
-            var p = t.GetType().GetProperty("FlightId");
-            if (p != null)
-            {
-                var v = p.GetValue(t);
-                if (v is int i) return i;
-                if (v is int ni) return ni;
-            }
-            return t.FlightInfo?.Id;
-        }
+        int? GetFlightId(Ticket t) => t.FlightInfo?.Id ?? t.FlightId;
 
-        var topFive = (
-            from f in flights
-            let cnt = tickets.Count(t => GetFlightId(t) == f.Id)
-            orderby cnt descending
-            select new FlightPassengerCountDto(f.FlightNumber, cnt)
-        )
-        .Take(5)
-        .ToList();
+        var topFive = flights
+            .Select(f => new FlightPassengerCountDto(f.FlightNumber, tickets.Count(t => GetFlightId(t) == f.Id)))
+            .OrderByDescending(x => x.PassengerCount)
+            .Take(5)
+            .ToList();
 
         return topFive;
     }
@@ -47,70 +37,42 @@ public class AnalyticService(
     /// <summary>
     /// Display a list of flights with the minimum travel time.
     /// </summary>
-    public List<FlightDurationDto> GetFlightsWithMinDuration()
+    public async Task<List<FlightDurationDto>> GetFlightsWithMinDurationAsync()
     {
-        var flights = flightRepository.Read();
+        var flights = await flightRepository.ReadAllAsync();
         var durations = flights.Where(f => f.Duration.HasValue).Select(f => f.Duration!.Value).ToList();
         if (!durations.Any()) return new List<FlightDurationDto>();
 
         var min = durations.Min();
 
-        var result = flights
+        return flights
             .Where(f => f.Duration.HasValue && f.Duration.Value == min)
             .Select(f => new FlightDurationDto(f.FlightNumber, f.Duration))
             .ToList();
-
-        return result;
     }
 
     /// <summary>
     /// Display information about all passengers flying on the selected flight whose baggage weight is zero, sorted by full name.
     /// </summary>
-    public List<PassengerReadDto> GetPassengersWithZeroBaggageOnFlight(string flightNumber)
+    public async Task<List<PassengerReadDto>> GetPassengersWithZeroBaggageOnFlightAsync(string flightNumber)
     {
-        var flights = flightRepository.Read();
-        var tickets = ticketRepository.Read();
-        var passengers = passengerRepository.Read();
+        var flights = await flightRepository.ReadAllAsync();
+        var tickets = await ticketRepository.ReadAllAsync();
+        var passengers = await passengerRepository.ReadAllAsync();
 
         var flight = flights.FirstOrDefault(f => f.FlightNumber == flightNumber);
         if (flight == null) return new List<PassengerReadDto>();
 
-        int? GetFlightId(Ticket t)
-        {
-            var p = t.GetType().GetProperty("FlightId");
-            if (p != null)
-            {
-                var v = p.GetValue(t);
-                if (v is int i) return i;
-                if (v is int ni) return ni;
-            }
-            return t.FlightInfo?.Id;
-        }
-
-        int? GetPassengerId(Ticket t)
-        {
-            var p = t.GetType().GetProperty("PassengerId");
-            if (p != null)
-            {
-                var v = p.GetValue(t);
-                if (v is int i) return i;
-                if (v is int ni) return ni;
-            }
-            return t.PassengerInfo?.Id;
-        }
-
         var selectedTickets = tickets
-            .Where(t => t.TotalBaggageWeight == 0 && GetFlightId(t) == flight.Id)
+            .Where(t => t.TotalBaggageWeight == 0 && (t.FlightInfo?.Id ?? t.FlightId) == flight.Id)
             .ToList();
 
-        var result = (
-            from t in selectedTickets
-            let pid = GetPassengerId(t)
-            where pid.HasValue
-            join p in passengers on pid.Value equals p.Id
-            orderby p.FullName
-            select new PassengerReadDto(p.Id, p.NumberOfPassport, p.FullName, p.BirthDate)
-        ).ToList();
+        var result = selectedTickets
+            .Select(t => passengers.FirstOrDefault(p => p.Id == (t.PassengerInfo?.Id ?? t.PassengerId)))
+            .Where(p => p != null)
+            .OrderBy(p => p!.FullName)
+            .Select(p => new PassengerReadDto(p!.Id, p.NumberOfPassport, p.FullName, p.BirthDate))
+            .ToList();
 
         return result;
     }
@@ -118,9 +80,9 @@ public class AnalyticService(
     /// <summary>
     /// Display summary information about all flights of aircraft of the selected model during a specified period of time.
     /// </summary>
-    public List<FlightSummaryDto> GetFlightsOfModelInPeriod(int modelId, DateOnly? fromDate, DateOnly? toDate)
+    public async Task<List<FlightSummaryDto>> GetFlightsOfModelInPeriodAsync(int modelId, DateOnly? fromDate, DateOnly? toDate)
     {
-        var flights = flightRepository.Read();
+        var flights = await flightRepository.ReadAllAsync();
 
         bool InPeriod(DateOnly? d)
         {
@@ -130,51 +92,32 @@ public class AnalyticService(
             return true;
         }
 
-        int? GetModelId(Flight f)
-        {
-            var p = f.GetType().GetProperty("AirplaneModelId");
-            if (p != null)
-            {
-                var v = p.GetValue(f);
-                if (v is int i) return i;
-                if (v is int ni) return ni;
-            }
-            return f.AirplaneModel?.Id;
-        }
-
-        var result = (
-            from f in flights
-            let mid = GetModelId(f)
-            where mid.HasValue && mid.Value == modelId
-                  && ((!fromDate.HasValue && !toDate.HasValue) || InPeriod(f.DepartureDate) || InPeriod(f.ArrivalDate))
-            select new FlightSummaryDto(
+        return flights
+            .Where(f => (f.AirplaneModel?.Id ?? f.AirplaneModelId) == modelId &&
+                        ((!fromDate.HasValue && !toDate.HasValue) || InPeriod(f.DepartureDate) || InPeriod(f.ArrivalDate)))
+            .Select(f => new FlightSummaryDto(
                 f.FlightNumber,
                 f.DepartureAirportCode,
                 f.DestinationAirportCode,
                 f.DepartureDate,
                 f.ArrivalDate,
                 f.DepartureTime,
-                f.Duration)
-        ).ToList();
-
-        return result;
+                f.Duration))
+            .ToList();
     }
 
     /// <summary>
     /// Display information about all flights departing from a specified departure point to a specified arrival point.
     /// </summary>
-    public List<FlightReadDto> GetFlightsByRoute(string departureCode, string arrivalCode)
+    public async Task<List<FlightReadDto>> GetFlightsByRouteAsync(string departureCode, string arrivalCode)
     {
-        var flights = flightRepository.Read();
+        var flights = await flightRepository.ReadAllAsync();
 
-        var matched = flights
-            .Where(f =>
-                string.Equals(f.DepartureAirportCode, departureCode, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(f.DestinationAirportCode, arrivalCode, StringComparison.OrdinalIgnoreCase))
-            .Select(f => MapToFlightReadDto(f))
+        return flights
+            .Where(f => string.Equals(f.DepartureAirportCode, departureCode, StringComparison.OrdinalIgnoreCase)
+                        && string.Equals(f.DestinationAirportCode, arrivalCode, StringComparison.OrdinalIgnoreCase))
+            .Select(MapToFlightReadDto)
             .ToList();
-
-        return matched;
     }
 
     private static FlightReadDto MapToFlightReadDto(Flight entity)

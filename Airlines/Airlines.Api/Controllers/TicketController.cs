@@ -1,4 +1,4 @@
-﻿using Airlines.Application.Services;
+﻿using Airlines.Application.Interfaces;
 using Airlines.Dto;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,72 +9,43 @@ namespace Airlines.Api.Controllers;
 /// </summary>
 [ApiController]
 [Route("api/[controller]")]
-public class TicketController(TicketService _service) : ControllerBase
+public class TicketController(ITicketService _service) : ControllerBase
 {
     /// <summary>
     /// Returns a list of all tickets
     /// </summary>
     [HttpGet]
-    [ProducesResponseType(200)]
-    public ActionResult GetAll() =>
-        Ok(_service.GetTickets());
+    [ProducesResponseType(typeof(List<TicketReadDto>), 200)]
+    public async Task<ActionResult<List<TicketReadDto>>> GetAll()
+    {
+        var tickets = await _service.GetTicketsAsync();
+        return Ok(tickets);
+    }
 
     /// <summary>
     /// Returns information about ticket by id
     /// </summary>
     [HttpGet("{id}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(TicketReadDto), 200)]
     [ProducesResponseType(404)]
-    public ActionResult Get(int id)
+    public async Task<ActionResult<TicketReadDto>> Get(int id)
     {
-        var entity = _service.GetTicket(id);
-        if (entity == null) return NotFound();
-        return Ok(entity);
-    }
-
-    /// <summary>
-    /// Returns all tickets for a specific flight
-    /// </summary>
-    [HttpGet("/api/flights/{flightId}/tickets")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    public ActionResult GetTicketsByFlight(int flightId)
-    {
-        var tickets = _service.GetTickets()
-            .Where(t => t.FlightInfo.Id == flightId)
-            .ToList();
-
-        if (!tickets.Any()) return NotFound();
-        return Ok(tickets);
-    }
-
-    /// <summary>
-    /// Returns all tickets for a specific passenger
-    /// </summary>
-    [HttpGet("/api/passengers/{passengerId}/tickets")]
-    [ProducesResponseType(200)]
-    [ProducesResponseType(404)]
-    public ActionResult GetTicketsByPassenger(int passengerId)
-    {
-        var tickets = _service.GetTickets()
-            .Where(t => t.PassengerInfo.Id == passengerId)
-            .ToList();
-
-        if (!tickets.Any()) return NotFound();
-        return Ok(tickets);
+        var ticket = await _service.GetTicketAsync(id);
+        if (ticket == null) return NotFound();
+        return Ok(ticket);
     }
 
     /// <summary>
     /// Create a new ticket
     /// </summary>
     [HttpPost]
-    [ProducesResponseType(201)]
-    public ActionResult Create([FromBody] TicketCreateDto dto)
+    [ProducesResponseType(typeof(TicketReadDto), 201)]
+    public async Task<ActionResult<TicketReadDto>> Create([FromBody] TicketCreateDto dto)
     {
         try
         {
-            var id = _service.CreateTicket(dto);
-            return CreatedAtAction(nameof(Get), new { id }, dto);
+            var ticket = await _service.CreateTicketAsync(dto);
+            return CreatedAtAction(nameof(Get), new { id = ticket.Id }, ticket);
         }
         catch (ArgumentException ex)
         {
@@ -86,13 +57,13 @@ public class TicketController(TicketService _service) : ControllerBase
     /// Update ticket by ID
     /// </summary>
     [HttpPut("{id}")]
-    [ProducesResponseType(200)]
+    [ProducesResponseType(typeof(TicketReadDto), 200)]
     [ProducesResponseType(404)]
-    public ActionResult Update(int id, [FromBody] TicketCreateDto dto)
+    public async Task<ActionResult<TicketReadDto>> Update(int id, [FromBody] TicketCreateDto dto)
     {
         try
         {
-            var updated = _service.UpdateTicket(id, dto);
+            var updated = await _service.UpdateTicketAsync(id, dto);
             if (updated == null) return NotFound();
             return Ok(updated);
         }
@@ -108,9 +79,10 @@ public class TicketController(TicketService _service) : ControllerBase
     [HttpDelete("{id}")]
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        _service.DeleteTicket(id);
+        var deleted = await _service.DeleteTicketAsync(id);
+        if (!deleted) return NotFound();
         return NoContent();
     }
 }

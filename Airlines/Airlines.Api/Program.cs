@@ -1,6 +1,5 @@
 using Airlines.Application.Services;
 using Airlines.Domain;
-using Airlines.Domain.Dataseeder;
 using Airlines.Domain.Repositories;
 using Airlines.Infrastructure.Db;
 using Airlines.Infrastructure.Db.Repositories;
@@ -11,7 +10,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
-builder.Services.AddSingleton<Dataseeder>();
 builder.Services.AddScoped<IRepository<AirplaneFamily>, DbAirplaneFamilyRepository>();
 builder.Services.AddScoped<IRepository<AirplaneModel>, DbAirplaneModelRepository>();
 builder.Services.AddScoped<IRepository<Flight>, DbFlightRepository>();

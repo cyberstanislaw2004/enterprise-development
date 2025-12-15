@@ -3,30 +3,30 @@
 /// <summary>
 /// Generic repository interface for CRUD operations
 /// </summary>
-public interface IRepository<TEntity>
+public interface IRepositoryNoAsync<TEntity>
 {
     /// <summary>
     /// Create a new entity
     /// </summary>
-    public Task<int> CreateAsync(TEntity entity);
+    public int Create(TEntity entity);
 
     /// <summary>
     /// Return all entities from repository
     /// </summary>
-    public Task<List<TEntity>> ReadAllAsync();
+    public List<TEntity> Read();
 
     /// <summary>
     /// Return entity by ID
     /// </summary>
-    public Task<TEntity?> ReadAsync(int id);
+    public TEntity? Read(int id);
 
     /// <summary>
     /// Update entity by ID
     /// </summary>
-    public Task<TEntity?> UpdateAsync(int id, TEntity entity);
+    public TEntity? Update(int id, TEntity entity);
 
     /// <summary>
     /// Delete entity by ID
     /// </summary>
-    public Task<bool> DeleteAsync(int id);
+    public bool Delete(int id);
 }
