@@ -14,6 +14,8 @@ public class DbAirplaneModelRepository(AppDbContext dbContext) : IRepository<Air
     /// </summary>
     public async Task<int> CreateAsync(AirplaneModel entity)
     {
+        entity.Id = 0;
+
         await dbContext.AirplaneModels.AddAsync(entity);
         await dbContext.SaveChangesAsync();
         return entity.Id;

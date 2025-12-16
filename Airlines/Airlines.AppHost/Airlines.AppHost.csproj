@@ -11,12 +11,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="13.0.2" />
     <PackageReference Include="Aspire.Hosting.AppHost" Version="13.0.0" />
+    <PackageReference Include="Aspire.Hosting.Nats" Version="13.0.2" />
     <PackageReference Include="Aspire.Hosting.SqlServer" Version="13.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Airlines.Api\Airlines.Api.csproj" />
+    <ProjectReference Include="..\Airlines.Generator.Nats.Host\Airlines.Generator.Nats.Host.csproj" />
     <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" IsAspireProjectResource="false" />
   </ItemGroup>
 

@@ -14,6 +14,7 @@ public class DbTicketRepository(AppDbContext dbContext) : IRepository<Ticket>
     /// </summary>
     public async Task<int> CreateAsync(Ticket entity)
     {
+        entity.Id = 0;
         await dbContext.Tickets.AddAsync(entity);
         await dbContext.SaveChangesAsync();
         return entity.Id;

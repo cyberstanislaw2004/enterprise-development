@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.1" />
+    <PackageReference Include="NATS.Client" Version="1.1.8" />
+    <PackageReference Include="NATS.Client.Core" Version="2.6.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Airlines.Application\Airlines.Application.csproj" />
+    <ProjectReference Include="..\Airlines.Dto\Airlines.Dto.csproj" />
+  </ItemGroup>
+
+</Project>

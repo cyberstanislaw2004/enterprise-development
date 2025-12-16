@@ -19,9 +19,9 @@ public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Fl
         {
             Id = 0,
             FlightId = flight.Id,
-            FlightInfo = flight,
+            //FlightInfo = flight,
             PassengerId = passenger.Id,
-            PassengerInfo = passenger,
+            //PassengerInfo = passenger,
             SeatNumber = entity.SeatNumber,
             HandLuggageAvailability = entity.HandLuggageAvailability,
             TotalBaggageWeight = entity.TotalBaggageWeight
@@ -73,7 +73,7 @@ public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Fl
     public async Task<TicketReadDto> CreateTicketAsync(TicketCreateDto dto)
     {
         var flight = await _flightRepository.ReadAsync(dto.FlightId)
-                     ?? throw new ArgumentException("Invalid Flight ID");
+                 ?? throw new ArgumentException("Invalid Flight ID");
 
         var passenger = await _passengerRepository.ReadAsync(dto.PassengerId)
                         ?? throw new ArgumentException("Invalid Passenger ID");
@@ -81,8 +81,8 @@ public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Fl
         var ticket = MapDto(dto, flight, passenger);
         var id = await _ticketRepository.CreateAsync(ticket);
 
-        ticket.Id = id;
-        return MapReadDto(ticket);
+        var createdTicket = await _ticketRepository.ReadAsync(id);
+        return MapReadDto(createdTicket!);
     }
 
     /// <summary>
@@ -106,14 +106,19 @@ public class TicketService(IRepository<Ticket> _ticketRepository, IRepository<Fl
     public async Task<TicketReadDto?> UpdateTicketAsync(int id, TicketCreateDto dto)
     {
         var flight = await _flightRepository.ReadAsync(dto.FlightId)
-                     ?? throw new ArgumentException("Invalid Flight ID");
+                 ?? throw new ArgumentException("Invalid Flight ID");
 
         var passenger = await _passengerRepository.ReadAsync(dto.PassengerId)
                         ?? throw new ArgumentException("Invalid Passenger ID");
 
         var ticket = MapDto(dto, flight, passenger);
         var updated = await _ticketRepository.UpdateAsync(id, ticket);
-        return updated == null ? null : MapReadDto(ticket);
+
+        if (updated == null)
+            return null;
+
+        var updatedTicket = await _ticketRepository.ReadAsync(id);
+        return MapReadDto(updatedTicket!);
     }
 
     /// <summary>

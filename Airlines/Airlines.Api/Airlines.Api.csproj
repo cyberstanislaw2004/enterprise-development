@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NATS.Client" Version="1.1.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
@@ -15,6 +16,7 @@
     <ProjectReference Include="..\Airlines.Application\Airlines.Application.csproj" />
     <ProjectReference Include="..\Airlines.Domain\Airlines.Domain.csproj" />
     <ProjectReference Include="..\Airlines.Infrastructure.Db\Airlines.Infrastructure.Db.csproj" />
+    <ProjectReference Include="..\Airlines.Infrastructure.Nats\Airlines.Infrastructure.Nats.csproj" />
     <ProjectReference Include="..\Airlines.ServiceDefaults\Airlines.ServiceDefaults.csproj" />
   </ItemGroup>
 

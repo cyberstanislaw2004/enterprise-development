@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.AppHost", "Airline
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.ServiceDefaults", "Airlines.ServiceDefaults\Airlines.ServiceDefaults.csproj", "{DAD9D20A-8829-45F9-A2D1-E6806FD7B430}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Generator.Nats.Host", "Airlines.Generator.Nats.Host\Airlines.Generator.Nats.Host.csproj", "{DD5674A4-2059-4A6E-9BBC-0F471ACC19EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Airlines.Infrastructure.Nats", "Airlines.Infrastructure.Nats\Airlines.Infrastructure.Nats.csproj", "{79715713-9D39-4C2D-8B03-8FBEA610FC66}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -69,6 +73,14 @@ Global
 		{DAD9D20A-8829-45F9-A2D1-E6806FD7B430}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DAD9D20A-8829-45F9-A2D1-E6806FD7B430}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DAD9D20A-8829-45F9-A2D1-E6806FD7B430}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD5674A4-2059-4A6E-9BBC-0F471ACC19EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD5674A4-2059-4A6E-9BBC-0F471ACC19EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD5674A4-2059-4A6E-9BBC-0F471ACC19EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD5674A4-2059-4A6E-9BBC-0F471ACC19EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79715713-9D39-4C2D-8B03-8FBEA610FC66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79715713-9D39-4C2D-8B03-8FBEA610FC66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79715713-9D39-4C2D-8B03-8FBEA610FC66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79715713-9D39-4C2D-8B03-8FBEA610FC66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
