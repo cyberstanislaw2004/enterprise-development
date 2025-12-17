@@ -8,7 +8,7 @@ namespace Airlines.Generator.Nats.Host.Services;
 /// <summary>
 /// Background service for generating and publishing ticket data to NATS.
 /// </summary>
-public class GeneratorService(IProducerService producer, ILogger<GeneratorService> logger, GeneratorOptions options) : BackgroundService
+public class GeneratorService(NatsProducer producer, ILogger<GeneratorService> logger, GeneratorOptions options) : BackgroundService
 {
     /// <summary>
     /// Executes the background ticket generation task.

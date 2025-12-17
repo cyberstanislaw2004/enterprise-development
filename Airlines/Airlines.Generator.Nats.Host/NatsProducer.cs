@@ -1,5 +1,4 @@
 ﻿using Airlines.Dto;
-using Airlines.Generator.Nats.Host.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using NATS.Client.Core;
@@ -10,24 +9,51 @@ using System.Text.Json;
 namespace Airlines.Generator.Nats.Host;
 
 /// <summary>
-/// NATS producer service for publishing ticket batches to a JetStream.
+///NATS producer service for publishing ticket batches to a JetStream.
 /// </summary>
+/// <param name="configuration">Configuration of app</param>
+/// <param name="connection">Nats connection</param>
+/// <param name="logger">Loger for messages and errors</param>
 public class NatsProducer(
     IConfiguration configuration,
     INatsConnection connection,
     ILogger<NatsProducer> logger
-) : IProducerService
+)
 {
-    private readonly string _streamName = configuration.GetSection("Nats")["StreamName"] ?? throw new KeyNotFoundException("StreamName section of Nats is missing");
-    private readonly string _rawSubject = configuration.GetSection("Nats")["RawSubject"] ?? throw new KeyNotFoundException("RawSubject section of Nats is missing");
+    /// <summary>
+    /// The name of the NATS stream where messages will be published
+    /// </summary>
+    private readonly string _streamName = configuration.GetSection("Nats")["StreamName"] 
+        ?? throw new KeyNotFoundException("StreamName section of Nats is missing");
+
+    /// <summary>
+    /// The subject used to publish raw ticket messages
+    /// </summary>
+    private readonly string _rawSubject = configuration.GetSection("Nats")["RawSubject"] 
+        ?? throw new KeyNotFoundException("RawSubject section of Nats is missing");
+
+    /// <summary>
+    /// The number of attempts to connect to nats
+    /// </summary>
     private readonly int _retryCount = configuration.GetValue<int?>("Nats:RetryCount") ?? 5;
-    private readonly TimeSpan _retryDelay = configuration.GetValue<TimeSpan?>("Nats:RetryDelay") ?? TimeSpan.FromSeconds(1);
-    private readonly TimeSpan _ackTimeout = configuration.GetValue<TimeSpan?>("Nats:AckTimeout") ?? TimeSpan.FromSeconds(5);
+
+    /// <summary>
+    /// The delay between connection attempts
+    /// </summary>
+    private readonly TimeSpan _retryDelay = configuration.GetValue<TimeSpan?>("Nats:RetryDelay") 
+        ?? TimeSpan.FromSeconds(1);
+
+    /// <summary>
+    /// The timeout for awaiting ACK responses
+    /// </summary>
+    private readonly TimeSpan _ackTimeout = configuration.GetValue<TimeSpan?>("Nats:AckTimeout") 
+        ?? TimeSpan.FromSeconds(5);
 
     /// <summary>
     /// Sends a batch of tickets to NATS with request-reply pattern.
     /// Creates stream if needed, publishes with reply inbox, awaits ACK with timeout.
     /// </summary>
+    /// <param name="batch">List of dto tickets for sendind</param>
     public async Task<BatchAckResponse> SendAsync(IList<TicketCreateDto> batch)
     {
         var batchId = Guid.NewGuid();

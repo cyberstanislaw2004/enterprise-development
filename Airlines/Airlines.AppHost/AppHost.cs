@@ -11,9 +11,7 @@ var batchSize = builder.AddParameter("GeneratorBatchSize");
 var payloadLimit = builder.AddParameter("GeneratorPayloadLimit");
 var waitTime = builder.AddParameter("GeneratorWaitTime");
 
-var natsUserName = builder.AddParameter("NatsLogin");
-var natsPassword = builder.AddParameter("NatsPassword");
-var nats = builder.AddNats("airlines-nats", userName: natsUserName, password: natsPassword, port: 4222)
+var nats = builder.AddNats("nats")
     .WithJetStream()
     .WithArgs("-m", "8222")
     .WithHttpEndpoint(port: 8222, targetPort: 8222);
@@ -28,22 +26,9 @@ var rawSubject = builder.AddParameter("RawSubject");
 var validatedSubject = builder.AddParameter("ValidatedSubject");
 builder.AddProject<Projects.Airlines_Generator_Nats_Host>("airlines-generator-nats-host")
     .WithReference(nats)
-    .WaitFor(nats)
-    .WithEnvironment("Generator:BatchSize", batchSize)
-    .WithEnvironment("Generator:PayloadLimit", payloadLimit)
-    .WithEnvironment("Generator:WaitTime", waitTime)
-    .WithEnvironment("Nats:StreamName", natsStream)
-    .WithEnvironment("Nats:RawSubject", rawSubject)
-    .WithEnvironment("Nats:ValidatedSubject", validatedSubject)
-    .WithEnvironment("Nats:Login", natsUserName)
-    .WithEnvironment("Nats:Password", natsPassword);
+    .WaitFor(nats);
 
-apiHost.WithEnvironment("Nats:Login", natsUserName)
-       .WithEnvironment("Nats:Password", natsPassword)
-       .WithEnvironment("Nats:RawSubject", rawSubject)
-       .WithEnvironment("Nats:ValidatedSubject", validatedSubject)
-       .WithEnvironment("Nats:StreamName", natsStream)
-       .WithReference(nats)
+apiHost.WithReference(nats)
        .WaitFor(nats);
 
 builder.Build().Run();
